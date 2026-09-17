@@ -1,0 +1,39 @@
+<main class="mx-auto my-10 max-w-[1000px] px-[22px] pb-[60px]">
+  <app-admin-page-header
+    [eyebrow]="'AdminSpeakers.Eyebrow' | translate"
+    [title]="'AdminSpeakers.Title' | translate"
+    [subtitle]="'AdminSpeakers.Subtitle' | translate">
+  </app-admin-page-header>
+
+  <app-admin-info-card
+    [title]="'AdminSpeakers.InfoTitle' | translate"
+    [description]="'AdminSpeakers.InfoBody' | translate">
+  </app-admin-info-card>
+
+  <section>
+    <div class="my-6 flex flex-wrap items-center gap-3">
+      <h2 class="m-0 mr-auto text-ink">{{ 'AdminSpeakers.YourSpeakers' | translate }}</h2>
+      <a routerLink="new" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white">{{ 'AdminSpeakers.NewSpeaker' | translate }}</a>
+    </div>
+
+    @if (!loading() && speakers().length === 0) {
+      <app-nodata [title]="'AdminSpeakers.EmptyState' | translate"></app-nodata>
+    }
+
+    <div class="grid gap-2.5">
+      @for (speaker of speakers(); track speaker.id) {
+        <div class="flex flex-wrap items-start gap-4 rounded-xl border border-line bg-white p-4">
+          <img [src]="speaker.imageUrl" [alt]="speaker.name" class="h-16 w-16 shrink-0 rounded-full object-cover" />
+          <div class="min-w-0 flex-1">
+            <strong class="block break-words text-ink">{{ speaker.name }}</strong>
+            <small class="block text-muted">{{ speaker.roleFr }}</small>
+            <small class="block font-bold text-primary">{{ editionLabel(speaker.editionId) }}</small>
+            <small class="text-muted">{{ speaker.isVisible ? ('AdminContacts.Visible' | translate) : ('AdminContacts.Hidden' | translate) }} · {{ speaker.status === 'published' ? ('Common.StatusPublished' | translate) : ('Common.StatusDraft' | translate) }}</small>
+          </div>
+          <a [routerLink]="[speaker.id]" class="rounded-lg border border-primary px-3.5 py-2 font-bold text-primary">{{ 'AdminParticipants.EditButton' | translate }}</a>
+          <button type="button" (click)="deleteSpeaker(speaker)" class="rounded-lg border border-[#b42318] px-3.5 py-2 font-bold text-[#b42318]">{{ 'AdminParticipants.DeleteButton' | translate }}</button>
+        </div>
+      }
+    </div>
+  </section>
+</main>

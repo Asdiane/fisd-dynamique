@@ -1,0 +1,89 @@
+<app-page-hero
+  [eyebrow]="'Conditions.HeroEyebrow' | translate"
+  [title]="'Conditions.HeroTitle' | translate"
+  [description]="'Conditions.HeroDescription' | translate"
+  image="assets/images/fisd-est-plaidoyer.jpg">
+</app-page-hero>
+
+<section class="py-[clamp(44px,6vw,76px)]">
+  <div class="mx-auto grid w-[min(900px,calc(100%-36px))] gap-6">
+    <a routerLink="/reservation" class="min-h-[46px] justify-self-start rounded-[14px] bg-white px-[18px] py-3 font-extrabold text-primary shadow-card">
+      {{ 'Conditions.Back' | translate }}
+    </a>
+
+    <div [appScrollReveal]="0" class="grid gap-3.5">
+      <app-collapsible-section [title]="'Conditions.PresentationTitle' | translate">
+        <p>{{ 'Conditions.PresentationP1' | translate }}</p>
+        <p>{{ 'Conditions.PresentationP2' | translate }}</p>
+      </app-collapsible-section>
+
+      <app-collapsible-section [title]="'Conditions.EligibilityTitle' | translate">
+        <p>{{ 'Conditions.EligibilityIntro' | translate }}</p>
+        <ul>
+          <li>{{ 'Conditions.EligibilityItem1' | translate }}</li>
+          <li>{{ 'Conditions.EligibilityItem2' | translate }}</li>
+        </ul>
+      </app-collapsible-section>
+
+      <app-collapsible-section [title]="'Conditions.RegistrationTitle' | translate">
+        <ul>
+          <li>{{ 'Conditions.RegistrationItem1' | translate }}</li>
+          <li>{{ 'Conditions.RegistrationItem2' | translate }}</li>
+          <li>{{ 'Conditions.RegistrationItem3' | translate }}</li>
+          <li>{{ 'Conditions.RegistrationItem4' | translate }}</li>
+          <li>{{ 'Conditions.RegistrationItem5' | translate }}</li>
+          <li>{{ 'Conditions.RegistrationItem6' | translate }}</li>
+        </ul>
+        <p>
+          {{ 'Conditions.PaymentIssuesPrefix' | translate }} <strong class="text-ink">info&#64;fisd.ca</strong>
+          {{ 'Conditions.PaymentIssuesOr' | translate }} <strong class="text-ink">+1 514 974-1455</strong>.
+        </p>
+      </app-collapsible-section>
+
+      <app-collapsible-section [title]="'Conditions.CancellationTitle' | translate">
+        <p>{{ 'Conditions.CancellationText' | translate }}</p>
+      </app-collapsible-section>
+
+      <app-collapsible-section [title]="'Conditions.ClausesTitle' | translate">
+        <h3>{{ 'Conditions.ParticipantsSubtitle' | translate }}</h3>
+        <ul>
+          <li>{{ 'Conditions.ParticipantsItem1' | translate }}</li>
+          <li>{{ 'Conditions.ParticipantsItem2' | translate }}</li>
+          <li>{{ 'Conditions.ParticipantsItem3' | translate }}</li>
+        </ul>
+        <h3 class="mt-4">{{ 'Conditions.PanelistsSubtitle' | translate }}</h3>
+        <ul>
+          <li>{{ 'Conditions.PanelistsItem1' | translate }}</li>
+          <li>{{ 'Conditions.PanelistsItem2' | translate }}</li>
+          <li>{{ 'Conditions.PanelistsItem3' | translate }}</li>
+          <li>{{ 'Conditions.PanelistsItem4' | translate }}</li>
+        </ul>
+        <h3 class="mt-4">{{ 'Conditions.PartnersSubtitle' | translate }}</h3>
+        <ul>
+          <li>{{ 'Conditions.PartnersItem1' | translate }}</li>
+          <li>{{ 'Conditions.PartnersItem2' | translate }}</li>
+          <li>{{ 'Conditions.PartnersItem3' | translate }}</li>
+          <li>{{ 'Conditions.PartnersItem4' | translate }}</li>
+        </ul>
+      </app-collapsible-section>
+
+      <app-collapsible-section [title]="'Conditions.ForeignTitle' | translate">
+        <p>{{ 'Conditions.ForeignText' | translate }}</p>
+      </app-collapsible-section>
+
+      <app-collapsible-section [title]="'Conditions.VisaTitle' | translate">
+        <p>{{ 'Conditions.VisaP1' | translate }}</p>
+        <p>{{ 'Conditions.VisaP2' | translate }}</p>
+        <p>{{ 'Conditions.VisaResourcePrefix' | translate }} <a href="https://ircc.canada.ca/francais/visiter/visas.asp" target="_blank" rel="noreferrer">{{ 'Conditions.VisaResourceLinkLabel' | translate }}</a>.</p>
+      </app-collapsible-section>
+
+      <app-collapsible-section [title]="'Conditions.ImageRightsTitle' | translate">
+        <p>{{ 'Conditions.ImageRightsText' | translate }}</p>
+      </app-collapsible-section>
+    </div>
+
+    <a [href]="zeffyUrl()" target="_blank" rel="noopener noreferrer" class="min-h-[46px] justify-self-start rounded-[14px] bg-[linear-gradient(90deg,#0000cc,#0000FF,#3785ff)] px-[18px] py-3 font-extrabold text-white shadow-[0_14px_40px_rgba(0,0,255,0.24)]">
+      {{ 'Reservation.ReserveCta' | translate }}
+    </a>
+  </div>
+</section>

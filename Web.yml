@@ -1,0 +1,118 @@
+trigger:
+  branches:
+    include:
+      - Integration
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+  # 1 - Install Node.js
+  - task: UseNode@1
+    displayName: '1 - Install Node.js 22'
+    inputs:
+      version: '22.x'
+
+  # 2 - Install dependencies
+  - script: npm ci
+    displayName: '2 - npm ci'
+    workingDirectory: '$(Build.SourcesDirectory)/web'
+
+  # 3 - Build Angular
+  - script: npx ng build --configuration=beta
+    displayName: '3 - ng build (beta)'
+    workingDirectory: '$(Build.SourcesDirectory)/web'
+
+  # 4 - Generate web.config for Angular SPA (URL rewrite)
+  - task: PowerShell@2
+    displayName: '4 - Generate web.config'
+    inputs:
+      targetType: 'inline'
+      script: |
+        $webConfig = @'
+        <?xml version="1.0" encoding="utf-8"?>
+        <configuration>
+          <system.webServer>
+            <httpErrors errorMode="Custom" existingResponse="Replace">
+              <remove statusCode="404" />
+              <error statusCode="404" path="/index.html" responseMode="ExecuteURL" />
+            </httpErrors>
+            <staticContent>
+              <remove fileExtension=".woff2" />
+              <mimeMap fileExtension=".woff2" mimeType="font/woff2" />
+              <remove fileExtension=".json" />
+              <mimeMap fileExtension=".json" mimeType="application/json" />
+            </staticContent>
+            <httpProtocol>
+              <customHeaders>
+                <add name="X-Frame-Options" value="DENY" />
+                <add name="X-Content-Type-Options" value="nosniff" />
+                <add name="Referrer-Policy" value="strict-origin-when-cross-origin" />
+                <add name="Strict-Transport-Security" value="max-age=31536000; includeSubDomains" />
+                <add name="Permissions-Policy" value="camera=(), microphone=(), geolocation=()" />
+                <add name="X-XSS-Protection" value="1; mode=block" />
+              </customHeaders>
+            </httpProtocol>
+          </system.webServer>
+          <location path="index.html">
+            <system.webServer>
+              <httpProtocol>
+                <customHeaders>
+                  <add name="Cache-Control" value="no-cache, no-store, must-revalidate" />
+                  <add name="Pragma" value="no-cache" />
+                  <add name="Expires" value="0" />
+                </customHeaders>
+              </httpProtocol>
+            </system.webServer>
+          </location>
+        </configuration>
+        '@
+        Set-Content -Path "$(Build.SourcesDirectory)/web/dist/web/browser/web.config" -Value $webConfig -Encoding UTF8
+        Write-Host "web.config generated"
+
+  # 5 - Prepare maintenance page as index.html (app_offline.htm is an ASP.NET/ANCM convention -
+  # this is a static site served by plain IIS, so it must overwrite the real index.html instead:
+  # every route resolves to it via the 404-to-index.html rewrite and the default document)
+  - task: PowerShell@2
+    displayName: '5 - Prepare maintenance page'
+    inputs:
+      targetType: 'inline'
+      script: |
+        New-Item -ItemType Directory -Path "$(Build.ArtifactStagingDirectory)/maintenance" -Force | Out-Null
+        Copy-Item "$(Build.SourcesDirectory)/web/app_offline.htm" "$(Build.ArtifactStagingDirectory)/maintenance/index.html" -Force
+
+  # 6 - Enable maintenance mode (overwrite index.html in place - single-file upload, no gap)
+  - task: FtpUpload@2
+    displayName: '6 - Enable maintenance mode'
+    inputs:
+      credentialsOption: 'inputs'
+      serverUrl: '$(FisdFtpServerUrl)'
+      username: '$(FisdFtpUsername)'
+      password: '$(FisdFtpPassword)'
+      rootDirectory: '$(Build.ArtifactStagingDirectory)/maintenance'
+      filePatterns: 'index.html'
+      remoteDirectory: '/'
+      clean: false
+      preservePaths: false
+      trustSSL: true
+
+  # 7 - Deploy via FTP (no cleanContents: files are overwritten in place so the directory always
+  # has an index.html - either the maintenance page or the new build, never neither. The new
+  # index.html landing automatically ends maintenance mode, no separate "disable" step needed.
+  # Trade-off: old hashed chunk files from previous builds are never swept, since a directory-wide
+  # clean would reopen the same gap this fix removes.)
+  - task: FtpUpload@2
+    displayName: '7 - Deploy via FTP'
+    retryCountOnTaskFailure: 3
+    inputs:
+      credentialsOption: 'inputs'
+      serverUrl: '$(FisdFtpServerUrl)'
+      username: '$(FisdFtpUsername)'
+      password: '$(FisdFtpPassword)'
+      rootDirectory: '$(Build.SourcesDirectory)/web/dist/web/browser'
+      filePatterns: '**'
+      remoteDirectory: '/'
+      clean: false
+      cleanContents: false
+      preservePaths: true
+      trustSSL: true

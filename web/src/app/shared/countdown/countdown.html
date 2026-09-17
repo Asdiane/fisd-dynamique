@@ -1,0 +1,24 @@
+@if (hasEvent() && !isPast()) {
+  <div class="countdown-card relative mx-auto grid w-[min(760px,100%)] grid-cols-4 gap-2.5 overflow-hidden rounded-[26px] bg-[linear-gradient(155deg,#000022,#0000aa_55%,#0000ff)] p-[clamp(16px,3vw,30px)] shadow-[0_30px_80px_rgba(0,0,255,0.28),0_0_0_1px_rgba(255,255,255,0.06)_inset] sm:gap-4">
+    <div class="countdown-shimmer pointer-events-none absolute inset-0"></div>
+
+    @for (unit of units; track unit.key; let last = $last) {
+      <div class="relative">
+        <div class="relative overflow-hidden rounded-2xl bg-white/[0.06] px-1.5 py-4 text-center ring-1 ring-white/10 backdrop-blur-sm sm:px-3 sm:py-6">
+          <span class="relative block h-[clamp(1.9rem,6.4vw,3.1rem)] overflow-hidden text-[clamp(1.9rem,6.4vw,3.1rem)] font-black leading-none text-white [font-variant-numeric:tabular-nums]">
+            @for (value of [unit.value()]; track value) {
+              <span class="countdown-digit inline-block [text-shadow:0_0_18px_rgba(80,130,255,0.65)]">{{ pad(value) }}</span>
+            }
+          </span>
+          <span class="mt-2 block text-[0.62rem] font-bold uppercase tracking-[0.16em] text-white/60 sm:text-[0.75rem]">{{ unit.labelKey | translate }}</span>
+        </div>
+        @if (!last) {
+          <span class="countdown-sep pointer-events-none absolute right-[-9px] top-1/2 hidden -translate-y-1/2 flex-col gap-2 sm:flex" aria-hidden="true">
+            <span class="h-1.5 w-1.5 rounded-full bg-white/50"></span>
+            <span class="h-1.5 w-1.5 rounded-full bg-white/50"></span>
+          </span>
+        }
+      </div>
+    }
+  </div>
+}

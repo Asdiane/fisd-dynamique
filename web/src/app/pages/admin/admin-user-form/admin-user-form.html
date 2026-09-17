@@ -1,0 +1,31 @@
+<main class="mx-auto my-10 max-w-[900px] px-[22px] pb-[60px]">
+  <a routerLink="/admin/users" class="mb-4 inline-flex items-center gap-1.5 font-bold text-primary">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M15 6l-6 6 6 6" /></svg>
+    {{ 'AdminUsers.YourUsers' | translate }}
+  </a>
+
+  <app-admin-page-header
+    [eyebrow]="'AdminUsers.Eyebrow' | translate"
+    [title]="'AdminUsers.NewTitle' | translate">
+  </app-admin-page-header>
+
+  <form (ngSubmit)="inviteUser()" class="mt-6 grid gap-6 rounded-[22px] border border-line bg-white p-8 sm:p-10">
+    <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+      {{ 'AdminUsers.FieldEmail' | translate }}
+      <input name="email" type="email" required [(ngModel)]="email" class="w-full rounded-lg border border-slate-400 p-3.5 text-[0.98rem] text-ink" />
+    </label>
+
+    <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+      <span class="inline-flex items-center">
+        {{ 'AdminUsers.FieldRole' | translate }}
+        <app-admin-help-tip [text]="'AdminUsers.HelpRole' | translate"></app-admin-help-tip>
+      </span>
+      <app-select name="role" [(ngModel)]="role" [options]="roleOptions"></app-select>
+    </label>
+
+    <div class="mt-2 flex flex-wrap items-center gap-3">
+      <button type="submit" [disabled]="busy()" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white disabled:cursor-wait disabled:opacity-50">{{ 'AdminUsers.SendInvite' | translate }}</button>
+      <a routerLink="/admin/users" class="rounded-lg border border-primary px-4 py-2.5 font-bold text-primary">{{ 'AdminUsers.Cancel' | translate }}</a>
+    </div>
+  </form>
+</main>

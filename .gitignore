@@ -1,0 +1,47 @@
+# Dependencies and build output
+node_modules/
+dist/
+build/
+.next/
+out/
+
+# .NET / Visual Studio build output and IDE state
+bin/
+obj/
+.vs/
+
+# Environment files with private values
+.env
+.env.*
+!.env.example
+
+# Required by the static deploy. This file must contain only public browser config.
+
+# Local generated folders
+.tmp-*/
+
+# Uploaded media - tracked in the MediaFiles DB table, not in source control
+api/Fisd.Api/media/
+
+# Local secrets, generated deployment configuration and certificates
+**/secrets.json
+**/appsettings.Local.json
+**/appsettings.*.local.json
+**/appsettings.Integration.json
+*.pfx
+*.p12
+*.pem
+*.key
+
+# Local database files, backups and logs
+*.mdf
+*.ldf
+*.bak
+*.sqlite
+*.sqlite3
+*.db
+*.log
+
+# Personal IDE settings
+*.user
+*.suo

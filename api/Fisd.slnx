@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Fisd.Api/Fisd.Api.csproj" />
+  <Project Path="Fisd.Application/Fisd.Application.csproj" />
+  <Project Path="Fisd.Persistence/Fisd.Persistence.csproj" />
+  <Project Path="Fisd.Tests/Fisd.Tests.csproj" />
+</Solution>

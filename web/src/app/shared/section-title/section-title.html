@@ -1,0 +1,13 @@
+<div class="max-w-[780px]">
+  <p [class]="light() ? 'mb-3.5 text-[0.82rem] font-black uppercase tracking-[0.18em] text-blue-100' : 'mb-3.5 text-[0.82rem] font-black uppercase tracking-[0.18em] text-primary'">
+    {{ eyebrow() }}
+  </p>
+  <h2 [class]="light() ? 'm-0 text-[clamp(2.1rem,4vw,4.4rem)] leading-[1.04] text-white' : 'm-0 text-[clamp(2.1rem,4vw,4.4rem)] leading-[1.04] text-ink'">
+    {{ title() }}
+  </h2>
+  @if (description()) {
+    <p [class]="light() ? 'mt-5 text-[1.08rem] leading-[1.8] text-blue-100' : 'mt-5 text-[1.08rem] leading-[1.8] text-muted'">
+      {{ description() }}
+    </p>
+  }
+</div>

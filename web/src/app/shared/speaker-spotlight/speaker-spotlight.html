@@ -1,0 +1,34 @@
+<div class="mt-11 grid grid-cols-1 items-center gap-[clamp(22px,4vw,44px)] rounded-[30px] border border-[rgba(0,0,255,0.18)] bg-[linear-gradient(135deg,#f8fbff,#ffffff)] p-[clamp(18px,3vw,30px)] shadow-[0_22px_56px_rgba(15,23,42,0.08)] md:grid-cols-[minmax(280px,0.85fr)_minmax(0,1.15fr)]">
+  <div [appTilt3d]="8" class="group overflow-hidden rounded-[24px] bg-[#0b1028] shadow-[0_18px_44px_rgba(15,23,42,0.14)]">
+    <img [src]="activeSpeaker.image" [alt]="activeSpeaker.name" class="aspect-square w-full object-contain transition-transform duration-500 ease-out group-hover:scale-110" />
+  </div>
+  <div>
+    <p class="mb-3.5 text-[0.82rem] font-black uppercase tracking-[0.18em] text-primary">Intervenant en vedette</p>
+    <h3 class="m-0 text-[clamp(2rem,4vw,3.6rem)] leading-[1.02] text-ink">{{ activeSpeaker.name }}</h3>
+    <p class="font-black text-primary">{{ activeSpeaker.role }}</p>
+    <p class="text-[1.04rem] leading-[1.75] text-muted">{{ activeSpeaker.description }}</p>
+    <div class="mt-6 flex flex-wrap items-center gap-3">
+      <button type="button" (click)="previous()" class="rounded-[14px] border border-line bg-white px-[15px] py-[11px] font-extrabold text-primary">Précédent</button>
+      <span class="font-black text-muted">{{ activeIndex() + 1 }} / {{ speakers().length }}</span>
+      <button type="button" (click)="next()" class="rounded-[14px] border border-line bg-white px-[15px] py-[11px] font-extrabold text-primary">Suivant</button>
+    </div>
+  </div>
+</div>
+
+<div class="mt-7 grid grid-cols-1 gap-[22px] sm:grid-cols-2 lg:grid-cols-3">
+  @for (speaker of speakers(); track speaker.name; let i = $index) {
+    <button
+      type="button"
+      [appTilt3d]="6"
+      (click)="select(i)"
+      [class]="'group block overflow-hidden rounded-[26px] border bg-white text-left shadow-[0_12px_34px_rgba(15,23,42,0.06)] transition-shadow duration-200 ' + (i === activeIndex() ? 'border-primary shadow-[0_18px_44px_rgba(0,0,255,0.14)]' : 'border-line')">
+      <div class="overflow-hidden">
+        <img [src]="speaker.image" [alt]="speaker.name" class="aspect-square w-full bg-[#0b1028] object-contain transition-transform duration-500 ease-out group-hover:scale-110" />
+      </div>
+      <div class="p-[18px]">
+        <h3 class="m-0 text-[1.15rem] leading-tight text-ink">{{ speaker.name }}</h3>
+        <p class="mt-2 text-[0.92rem] leading-snug text-muted">{{ speaker.role }}</p>
+      </div>
+    </button>
+  }
+</div>

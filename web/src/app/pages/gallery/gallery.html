@@ -1,0 +1,154 @@
+<app-page-hero
+  [eyebrow]="'Gallery.HeroEyebrow' | translate"
+  [title]="'Gallery.HeroTitle' | translate"
+  [description]="'Gallery.HeroDescription' | translate"
+  image="assets/images/slider-groupe.jpg"
+>
+</app-page-hero>
+
+<section class="py-[clamp(44px,6vw,76px)]">
+  <div class="mx-auto w-[min(1180px,calc(100%-36px))]">
+    <app-section-title
+      [eyebrow]="'Gallery.SectionEyebrow' | translate"
+      [title]="'Gallery.SectionTitle' | translate"
+      [description]="'Gallery.SectionDescription' | translate"
+    >
+    </app-section-title>
+
+    <div class="my-7 flex flex-wrap gap-3">
+      @for (event of events(); track event.id) {
+        <button
+          type="button"
+          (click)="selectEdition(event.id)"
+          [class]="
+            'rounded-2xl px-[18px] py-3 font-extrabold ' +
+            (event.id === activeEditionId()
+              ? 'bg-primary text-white'
+              : 'bg-white text-ink border border-line')
+          "
+        >
+          {{ event.year }}
+        </button>
+      }
+    </div>
+
+    @if (archivedProgram) {
+      <div
+        class="mb-6 rounded-[26px] border border-line bg-white p-6 shadow-[0_12px_34px_rgba(15,23,42,0.06)]"
+      >
+        <button
+          type="button"
+          (click)="toggleArchive()"
+          class="w-full text-left font-extrabold text-ink"
+        >
+          {{ 'Gallery.ArchivedProgram' | translate: { edition: activeEdition.id } }}
+        </button>
+        @if (archiveOpen()) {
+          <div class="mt-5 grid gap-6">
+            @for (day of archivedProgram.days; track day.id) {
+              <section>
+                <h3 class="text-ink">{{ day.label }} {{ day.date }}</h3>
+                <div class="mt-3 grid gap-3">
+                  @for (item of day.schedule; track item.title) {
+                    <article
+                      class="grid grid-cols-[132px_1fr] gap-4 rounded-[22px] border border-line bg-[#f8fbff] p-[18px]"
+                    >
+                      <div
+                        class="self-start rounded-2xl bg-primary px-2.5 py-3.5 text-center font-black text-white"
+                      >
+                        {{ item.time }}
+                      </div>
+                      <div>
+                        <h4 class="m-0 text-ink">{{ item.title }}</h4>
+                        <p class="mt-1 text-muted">{{ item.detail }}</p>
+                        <small class="text-muted">{{ item.location }}</small>
+                      </div>
+                    </article>
+                  }
+                </div>
+              </section>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <div
+      class="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]"
+    >
+      <div
+        [appScrollReveal]="0"
+        class="overflow-hidden rounded-[30px] border border-line bg-white shadow-card"
+      >
+        @if (activePhoto) {
+          <div class="relative min-h-[500px] bg-[#0b1028]">
+            <img
+              [src]="activePhoto.imageUrl"
+              [alt]="activePhoto.caption"
+              class="h-[500px] w-full object-contain"
+            />
+          </div>
+          <div class="border-t border-line bg-white p-7">
+            <p class="m-0 text-[0.82rem] font-black uppercase tracking-[0.18em] text-primary">
+              {{ activeEdition.year }}
+            </p>
+            <h2 class="mt-2 text-ink">{{ activeEdition.title }}</h2>
+            <p class="mt-2 text-muted">{{ activeEdition.text }}</p>
+          </div>
+        } @else {
+          <div
+            class="grid min-h-[420px] place-items-center bg-[linear-gradient(135deg,rgba(224,36,48,0.13),rgba(15,76,129,0.12)),#f8fafc] px-6 py-10"
+          >
+            <div class="max-w-[540px] text-center text-ink">
+              <span
+                class="mb-4.5 inline-flex h-[74px] w-[74px] items-center justify-center rounded-full border border-line bg-white font-black"
+                >{{ activeEdition.year }}</span
+              >
+              <h2 class="m-0 mb-2.5 text-[clamp(2rem,5vw,3.5rem)] leading-none">
+                {{ statusTitle }}
+              </h2>
+              <p class="m-0 leading-[1.7] text-muted">{{ statusText }}</p>
+            </div>
+          </div>
+        }
+      </div>
+
+      <aside
+        [appScrollReveal]="120"
+        class="rounded-[26px] border border-line bg-white p-7 shadow-[0_12px_34px_rgba(15,23,42,0.06)]"
+      >
+        <p class="m-0 text-[0.82rem] font-black uppercase tracking-[0.18em] text-primary">
+          {{ activeEdition.year }}
+        </p>
+        <h3 class="mt-3.5 text-[1.55rem] text-ink">{{ activeEdition.title }}</h3>
+        <p class="mt-3 leading-[1.75] text-muted">{{ activeEdition.text }}</p>
+
+        @if (activeEdition.photos.length > 0) {
+          <div class="mt-6 grid max-h-[520px] grid-cols-2 gap-3.5 overflow-auto">
+            @for (photo of activeEdition.photos; track photo.imageUrl; let i = $index) {
+              <button
+                type="button"
+                (click)="selectPhoto(i)"
+                [class]="
+                  'overflow-hidden rounded-[20px] ' +
+                  (i === activePhotoIndex() ? 'ring-2 ring-primary' : '')
+                "
+              >
+                <img
+                  [src]="photo.imageUrl"
+                  [alt]="photo.caption"
+                  class="aspect-[4/3] w-full bg-[#0b1028] object-cover"
+                />
+              </button>
+            }
+          </div>
+        } @else {
+          <div class="mt-6 rounded-[20px] border border-line bg-white p-6 shadow-card">
+            <strong class="mb-2 block text-ink">{{ statusTitle }}</strong>
+            <p class="m-0 leading-[1.7] text-muted">{{ statusText }}</p>
+          </div>
+        }
+      </aside>
+    </div>
+  </div>
+</section>

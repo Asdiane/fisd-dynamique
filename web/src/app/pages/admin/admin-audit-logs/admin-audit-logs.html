@@ -1,0 +1,78 @@
+<main class="mx-auto my-10 max-w-[1200px] px-[22px] pb-[60px]">
+  <app-admin-page-header
+    [eyebrow]="'AdminAuditLogs.Eyebrow' | translate"
+    [title]="'AdminAuditLogs.Title' | translate"
+    [subtitle]="'AdminAuditLogs.Subtitle' | translate">
+  </app-admin-page-header>
+
+  <div class="my-6 flex flex-wrap items-center gap-3">
+    <app-select
+      [(ngModel)]="action"
+      (ngModelChange)="onActionChange()"
+      [options]="actionOptions"
+      triggerClass="min-w-[180px] rounded-lg border border-slate-400 bg-white p-2.5 font-bold text-ink">
+    </app-select>
+    <span class="text-muted">{{ 'AdminAuditLogs.TotalCount' | translate: { count: totalCount() } }}</span>
+  </div>
+
+  @if (!loading() && logs().length === 0) {
+    <app-nodata [title]="'AdminAuditLogs.EmptyState' | translate"></app-nodata>
+  }
+
+  <div class="grid gap-2.5">
+    @for (log of logs(); track log.id) {
+      <div class="rounded-xl border border-line bg-white">
+        <button type="button" (click)="toggleDetail(log)" class="flex w-full flex-wrap items-center gap-3 p-4 text-left">
+          <span class="rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold uppercase tracking-wide" [class]="actionBadgeClass(log.action)">
+            {{ ('AdminAuditLogs.Action' + log.action) | translate }}
+          </span>
+          <div class="min-w-0 flex-1">
+            <strong class="block break-words text-ink">{{ log.tableName }}</strong>
+            <small class="text-muted">
+              {{ log.timestamp | date: 'medium' }}
+              @if (log.adminUserEmail) {
+                &middot; {{ log.adminUserEmail }}
+              }
+            </small>
+          </div>
+          <span class="text-muted">{{ expandedId() === log.id ? '&#9650;' : '&#9660;' }}</span>
+        </button>
+
+        @if (expandedId() === log.id) {
+          <div class="border-t border-line bg-surface p-4">
+            @if (loadingDetail()) {
+              <p class="text-muted">{{ 'AdminAuditLogs.LoadingDetail' | translate }}</p>
+            } @else {
+              <div class="grid gap-4 sm:grid-cols-2">
+                @if (expandedDetail()?.oldValues) {
+                  <div>
+                    <p class="mb-1.5 text-[0.8rem] font-semibold text-slate-700">{{ 'AdminAuditLogs.OldValues' | translate }}</p>
+                    <pre class="max-h-[320px] overflow-auto whitespace-pre-wrap break-words rounded-lg bg-white p-3 text-[0.78rem] text-ink ring-1 ring-line">{{ formatJson(expandedDetail()?.oldValues) }}</pre>
+                  </div>
+                }
+                @if (expandedDetail()?.newValues) {
+                  <div>
+                    <p class="mb-1.5 text-[0.8rem] font-semibold text-slate-700">{{ 'AdminAuditLogs.NewValues' | translate }}</p>
+                    <pre class="max-h-[320px] overflow-auto whitespace-pre-wrap break-words rounded-lg bg-white p-3 text-[0.78rem] text-ink ring-1 ring-line">{{ formatJson(expandedDetail()?.newValues) }}</pre>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  @if (totalPages > 1) {
+    <div class="my-6 flex items-center justify-center gap-3">
+      <button type="button" (click)="goToPage(page() - 1)" [disabled]="page() <= 1" class="rounded-lg border border-slate-400 px-3.5 py-2 font-bold text-ink disabled:cursor-not-allowed disabled:opacity-50">
+        {{ 'AdminAuditLogs.Previous' | translate }}
+      </button>
+      <span class="text-muted">{{ 'AdminAuditLogs.PageIndicator' | translate: { page: page(), totalPages } }}</span>
+      <button type="button" (click)="goToPage(page() + 1)" [disabled]="page() >= totalPages" class="rounded-lg border border-slate-400 px-3.5 py-2 font-bold text-ink disabled:cursor-not-allowed disabled:opacity-50">
+        {{ 'AdminAuditLogs.Next' | translate }}
+      </button>
+    </div>
+  }
+</main>

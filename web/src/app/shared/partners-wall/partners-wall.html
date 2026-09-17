@@ -1,0 +1,17 @@
+<div class="partners-marquee-mask mt-11 overflow-hidden rounded-[30px] border border-line bg-[linear-gradient(180deg,rgba(248,250,252,0.9),rgba(255,255,255,1))] py-[clamp(18px,3vw,28px)] shadow-[0_22px_60px_rgba(15,23,42,0.08)]">
+  <div class="partners-marquee-track flex w-max items-stretch gap-3.5 sm:gap-4" [style.--marquee-duration]="marqueeDuration()">
+    @for (group of [0, 1]; track group) {
+      <div class="flex shrink-0 items-stretch gap-3.5 sm:gap-4" [attr.aria-hidden]="group === 1 ? 'true' : null">
+        @for (partner of partners(); track partner.logo) {
+          <div class="group grid aspect-[5/3] w-[150px] shrink-0 place-items-center gap-1.5 rounded-2xl border border-line bg-white p-3 shadow-[0_8px_20px_rgba(15,23,42,0.07)] transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_16px_34px_rgba(0,0,255,0.14)] sm:w-[172px] sm:p-4">
+            <img
+              [src]="partner.logo"
+              [alt]="partner.name"
+              class="max-h-[46px] w-full object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-[1.04] sm:max-h-[54px]" />
+            <span class="text-center text-[0.72rem] font-extrabold leading-tight text-slate-600 sm:text-[0.78rem]">{{ partner.label || partner.name }}</span>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

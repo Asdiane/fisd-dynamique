@@ -1,0 +1,63 @@
+<main class="mx-auto my-10 max-w-[900px] px-[22px] pb-[60px]">
+  <a routerLink="/admin/articles" class="mb-4 inline-flex items-center gap-1.5 font-bold text-primary">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M15 6l-6 6 6 6" /></svg>
+    {{ 'AdminArticles.YourArticles' | translate }}
+  </a>
+
+  <app-admin-page-header
+    [eyebrow]="'AdminArticles.Eyebrow' | translate"
+    [title]="editingId ? ('AdminArticles.EditTitle' | translate) : ('AdminArticles.NewTitle' | translate)">
+  </app-admin-page-header>
+
+  <form (ngSubmit)="save(current ? current.status : ArticleStatus.Draft)" class="mt-6 rounded-[22px] border border-line bg-white p-8 sm:p-10">
+    <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+      {{ 'AdminArticles.FieldTitle' | translate }}
+      <input name="title" maxlength="200" required [(ngModel)]="title" (ngModelChange)="markDirty()" class="w-full rounded-lg border border-slate-400 p-3.5 text-[0.98rem] text-ink" />
+    </label>
+
+    <label class="mt-4 grid gap-2 font-semibold text-slate-700">
+      {{ 'AdminArticles.FieldExcerpt' | translate }}
+      <textarea name="excerpt" rows="3" maxlength="600" [(ngModel)]="excerpt" (ngModelChange)="markDirty()" [placeholder]="'AdminArticles.ExcerptPlaceholder' | translate" class="w-full resize-y rounded-lg border border-slate-400 p-3.5 text-[0.98rem] leading-[1.6] text-ink"></textarea>
+    </label>
+
+    <label class="mt-4 grid gap-2 font-semibold text-slate-700">
+      {{ 'AdminArticles.FieldImage' | translate }}
+      <input name="image" type="file" accept="image/jpeg,image/png,image/webp" (change)="onImageSelected($event)" class="w-full rounded-lg border border-slate-400 p-3.5 text-[0.98rem] text-ink" />
+    </label>
+    <p class="text-[0.9rem] text-muted">{{ 'AdminArticles.ImageHint' | translate }}</p>
+    @if (coverPreviewUrl) {
+      <img [src]="coverPreviewUrl" alt="" class="my-4 max-h-[240px] object-contain" />
+      <button type="button" (click)="removeImage()" class="rounded-lg border border-primary px-3.5 py-2 font-bold text-primary">{{ 'AdminArticles.RemoveImage' | translate }}</button>
+    }
+
+    <label class="mt-4 grid gap-2 font-semibold text-slate-700">
+      {{ 'AdminArticles.FieldContent' | translate }}
+      <textarea name="content" rows="14" required [(ngModel)]="content" (ngModelChange)="markDirty()" [placeholder]="'AdminArticles.ContentPlaceholder' | translate" class="w-full resize-y rounded-lg border border-slate-400 p-3.5 text-[0.98rem] leading-[1.6] text-ink"></textarea>
+    </label>
+
+    <div class="mt-5 flex flex-wrap items-center gap-3">
+      <button type="button" (click)="togglePreview()" class="rounded-lg border border-primary px-4 py-2.5 font-bold text-primary">{{ 'AdminArticles.Preview' | translate }}</button>
+      <button type="button" [disabled]="busy()" (click)="save(ArticleStatus.Draft)" class="rounded-lg border border-primary px-4 py-2.5 font-bold text-primary disabled:cursor-wait disabled:opacity-50">{{ 'AdminArticles.SaveDraft' | translate }}</button>
+      <button type="button" [disabled]="busy()" (click)="save(ArticleStatus.Published)" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white disabled:cursor-wait disabled:opacity-50">{{ 'AdminArticles.Publish' | translate }}</button>
+      <a routerLink="/admin/articles" class="rounded-lg border border-primary px-4 py-2.5 font-bold text-primary">{{ 'AdminArticles.Close' | translate }}</a>
+      @if (editingId) {
+        <button type="button" [disabled]="busy()" (click)="delete()" class="ml-auto rounded-lg border border-[#b42318] px-4 py-2.5 font-bold text-[#b42318] disabled:cursor-wait disabled:opacity-50">{{ 'AdminParticipants.DeleteButton' | translate }}</button>
+      }
+    </div>
+    <p class="mt-3 text-[0.9rem] text-muted">{{ 'AdminArticles.DraftHint' | translate }}</p>
+  </form>
+
+  @if (previewOpen()) {
+    <div class="fixed inset-0 z-50 grid place-items-center bg-[#000022b3] p-4" (click)="togglePreview()">
+      <article (click)="$event.stopPropagation()" class="max-h-[90vh] w-full max-w-[900px] overflow-auto rounded-2xl bg-white p-6">
+        <button type="button" (click)="togglePreview()" class="mb-4 rounded-lg border border-primary px-3.5 py-2 font-bold text-primary">{{ 'AdminArticles.ClosePreview' | translate }}</button>
+        @if (coverPreviewUrl) {
+          <img [src]="coverPreviewUrl" alt="" class="max-h-[340px] w-full object-contain" />
+        }
+        <h2 class="text-ink">{{ title || ('AdminArticles.Untitled' | translate) }}</h2>
+        <p class="text-muted">{{ excerpt }}</p>
+        <div class="whitespace-pre-wrap break-words leading-[1.7] text-ink">{{ content }}</div>
+      </article>
+    </div>
+  }
+</main>

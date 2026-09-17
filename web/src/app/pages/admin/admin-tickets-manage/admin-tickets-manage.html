@@ -1,0 +1,63 @@
+<main class="mx-auto my-10 max-w-[1000px] px-[22px] pb-[60px]">
+  <a routerLink="/admin/tickets" class="mb-4 inline-flex items-center gap-1.5 font-bold text-primary">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M15 6l-6 6 6 6" /></svg>
+    {{ 'AdminTickets.Title' | translate }}
+  </a>
+
+  <app-admin-page-header
+    [eyebrow]="'AdminTicketsManage.Eyebrow' | translate"
+    [title]="'AdminTicketsManage.Title' | translate"
+    [subtitle]="'AdminTicketsManage.Subtitle' | translate">
+  </app-admin-page-header>
+
+  @if (!loading() && tickets().length === 0) {
+    <app-nodata [title]="'AdminTicketsManage.EmptyState' | translate"></app-nodata>
+  }
+
+  <div class="mt-6 grid gap-4">
+    @for (ticket of tickets(); track ticket.id) {
+      <div class="rounded-[18px] border border-line bg-white p-5 sm:p-6">
+        <div class="flex flex-wrap items-start gap-3">
+          <div class="min-w-0 flex-1">
+            <small class="block font-bold uppercase tracking-wide text-primary">{{ categoryLabel(ticket.category) }}</small>
+            <strong class="block break-words text-ink">{{ ticket.title }}</strong>
+            <small class="text-muted">{{ 'AdminTicketsManage.By' | translate }} {{ ticket.createdByEmail }} — {{ ticket.createdAt | date: 'short' }}</small>
+          </div>
+          <button type="button" (click)="deleteTicket(ticket)" class="rounded-lg border border-[#b42318] px-3.5 py-2 font-bold text-[#b42318]">{{ 'AdminParticipants.DeleteButton' | translate }}</button>
+        </div>
+
+        <p class="mt-3 whitespace-pre-wrap break-words text-[0.92rem] leading-relaxed text-ink">{{ ticket.description }}</p>
+
+        @if (ticket.attachments.length > 0) {
+          <div class="mt-2 flex flex-wrap gap-2">
+            @for (attachment of ticket.attachments; track attachment.id) {
+              <a [href]="attachment.url" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 rounded-lg border border-line px-2.5 py-1.5 text-[0.82rem] font-semibold text-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5 shrink-0"><path d="M21.44 11.05l-9.19 9.19a5 5 0 01-7.07-7.07l9.19-9.19a3 3 0 014.24 4.24l-9.2 9.19a1 1 0 01-1.41-1.41l8.49-8.48" /></svg>
+                {{ attachment.originalFileName }}
+              </a>
+            }
+          </div>
+        }
+
+        <div class="mt-4 grid gap-4 border-t border-line pt-4 sm:grid-cols-[220px_1fr_auto] sm:items-end">
+          <label class="grid gap-2 text-[0.9rem] font-semibold text-slate-700">
+            {{ 'AdminTicketsManage.FieldStatus' | translate }}
+            <select [(ngModel)]="draftFor(ticket).status" class="w-full rounded-lg border border-slate-400 p-3 text-[0.95rem] text-ink">
+              <option value="open">{{ 'AdminTickets.StatusOpen' | translate }}</option>
+              <option value="in_progress">{{ 'AdminTickets.StatusInProgress' | translate }}</option>
+              <option value="resolved">{{ 'AdminTickets.StatusResolved' | translate }}</option>
+              <option value="rejected">{{ 'AdminTickets.StatusRejected' | translate }}</option>
+            </select>
+          </label>
+
+          <label class="grid gap-2 text-[0.9rem] font-semibold text-slate-700">
+            {{ 'AdminTicketsManage.FieldResolutionNote' | translate }}
+            <input [(ngModel)]="draftFor(ticket).resolutionNote" maxlength="2000" class="w-full rounded-lg border border-slate-400 p-3 text-[0.95rem] text-ink" />
+          </label>
+
+          <button type="button" [disabled]="savingId() === ticket.id" (click)="save(ticket)" class="rounded-lg bg-primary px-4 py-3 font-bold text-white disabled:cursor-wait disabled:opacity-50">{{ 'AdminTicketsManage.SaveButton' | translate }}</button>
+        </div>
+      </div>
+    }
+  </div>
+</main>

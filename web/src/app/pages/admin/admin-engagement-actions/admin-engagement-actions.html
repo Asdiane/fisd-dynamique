@@ -1,0 +1,38 @@
+<main class="mx-auto my-10 max-w-[1000px] px-[22px] pb-[60px]">
+  <app-admin-page-header
+    [eyebrow]="'AdminEngagementActions.Eyebrow' | translate"
+    [title]="'AdminEngagementActions.Title' | translate"
+    [subtitle]="'AdminEngagementActions.Subtitle' | translate">
+  </app-admin-page-header>
+
+  <app-admin-info-card
+    [title]="'AdminEngagementActions.InfoTitle' | translate"
+    [description]="'AdminEngagementActions.InfoBody' | translate">
+  </app-admin-info-card>
+
+  <section>
+    <div class="my-6 flex flex-wrap items-center gap-3">
+      <h2 class="m-0 mr-auto text-ink">{{ 'AdminEngagementActions.YourActions' | translate }}</h2>
+      <a routerLink="new" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white">{{ 'AdminEngagementActions.NewAction' | translate }}</a>
+    </div>
+
+    @if (!loading() && actions().length === 0) {
+      <app-nodata [title]="'AdminEngagementActions.EmptyState' | translate"></app-nodata>
+    }
+
+    <div class="grid gap-2.5">
+      @for (action of actions(); track action.id) {
+        <div class="flex flex-wrap items-start gap-4 rounded-xl border border-line bg-white p-4">
+          <img [src]="action.imageUrl" [alt]="action.titleFr" class="h-16 w-24 shrink-0 rounded-lg object-cover" />
+          <div class="min-w-0 flex-1">
+            <strong class="block break-words text-ink">{{ action.icon }}  {{ action.titleFr }}</strong>
+            <small class="block text-muted">#{{ action.anchor }} · {{ action.ctaFr }}</small>
+            <small class="text-muted">{{ action.isVisible ? ('AdminContacts.Visible' | translate) : ('AdminContacts.Hidden' | translate) }} · {{ action.status === 'published' ? ('Common.StatusPublished' | translate) : ('Common.StatusDraft' | translate) }}</small>
+          </div>
+          <a [routerLink]="[action.id]" class="rounded-lg border border-primary px-3.5 py-2 font-bold text-primary">{{ 'AdminParticipants.EditButton' | translate }}</a>
+          <button type="button" (click)="deleteAction(action)" class="rounded-lg border border-[#b42318] px-3.5 py-2 font-bold text-[#b42318]">{{ 'AdminParticipants.DeleteButton' | translate }}</button>
+        </div>
+      }
+    </div>
+  </section>
+</main>

@@ -1,0 +1,84 @@
+<main class="mx-auto my-10 max-w-[1000px] px-[22px] pb-[60px]">
+  <app-admin-page-header
+    [eyebrow]="'AdminSecurity.Eyebrow' | translate"
+    [title]="'AdminSecurity.Title' | translate"
+    [subtitle]="'AdminSecurity.Subtitle' | translate">
+  </app-admin-page-header>
+
+  <app-admin-info-card
+    [title]="'AdminSecurity.InfoTitle' | translate"
+    [description]="'AdminSecurity.InfoBody' | translate">
+  </app-admin-info-card>
+
+  @if (isPlatformAdmin()) {
+    <section class="my-6 flex flex-wrap items-center gap-4 rounded-xl border border-line bg-white p-4">
+      <div class="min-w-0 flex-1">
+        <strong class="block text-ink">{{ 'AdminSecurity.ResetTwoFactorTitle' | translate }}</strong>
+        <small class="text-muted">{{ 'AdminSecurity.ResetTwoFactorHint' | translate }}</small>
+      </div>
+      <button
+        type="button"
+        (click)="resetMyTwoFactor()"
+        [disabled]="resettingTwoFactor()"
+        class="flex items-center gap-2 rounded-lg border border-[#b42318] px-3.5 py-2 font-bold text-[#b42318] disabled:cursor-not-allowed disabled:opacity-50">
+        @if (resettingTwoFactor()) {
+          <span class="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-[#b42318]/30 border-t-[#b42318]"></span>
+        }
+        {{ 'AdminSecurity.ResetTwoFactorButton' | translate }}
+      </button>
+    </section>
+  }
+
+  <section>
+    <div class="my-6 flex flex-wrap items-center gap-3">
+      <h2 class="m-0 mr-auto text-ink">{{ 'AdminSecurity.YourPasskeys' | translate }}</h2>
+      @if (supportsPasskeys && !addingOpen()) {
+        <button type="button" (click)="addingOpen.set(true)" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white">{{ 'AdminSecurity.AddButton' | translate }}</button>
+      }
+    </div>
+
+    @if (!supportsPasskeys) {
+      <p class="text-muted">{{ 'AdminSecurity.NotSupported' | translate }}</p>
+    }
+
+    @if (addingOpen()) {
+      <div class="mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-line bg-white p-4">
+        <input
+          type="text"
+          name="passkeyLabel"
+          [(ngModel)]="newLabel"
+          [placeholder]="'AdminSecurity.LabelPlaceholder' | translate"
+          class="h-11 flex-1 rounded-lg border-0 bg-surface px-3.5 text-[0.92rem] text-ink outline-none ring-1 ring-line focus:bg-white focus:ring-2 focus:ring-primary-300" />
+        <button
+          type="button"
+          (click)="addPasskey()"
+          [disabled]="adding() || !newLabel.trim()"
+          class="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 font-bold text-white disabled:cursor-not-allowed disabled:opacity-50">
+          @if (adding()) {
+            <span class="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
+          }
+          {{ 'AdminSecurity.ConfirmAdd' | translate }}
+        </button>
+        <button type="button" (click)="addingOpen.set(false)" class="rounded-lg border border-slate-400 px-4 py-2.5 font-bold text-ink">{{ 'AdminUsers.Cancel' | translate }}</button>
+      </div>
+    }
+
+    @if (!loading() && passkeys().length === 0) {
+      <app-nodata [title]="'AdminSecurity.EmptyState' | translate"></app-nodata>
+    }
+
+    <div class="grid gap-2.5">
+      @for (passkey of passkeys(); track passkey.id) {
+        <div class="flex flex-wrap items-center gap-4 rounded-xl border border-line bg-white p-4">
+          <div class="min-w-0 flex-1">
+            <strong class="block break-words text-ink">{{ passkey.deviceLabel }}</strong>
+            <small class="text-muted">
+              {{ passkey.lastUsedOn ? ('AdminSecurity.LastUsed' | translate: { date: (passkey.lastUsedOn | date: 'mediumDate') }) : ('AdminSecurity.NeverUsed' | translate) }}
+            </small>
+          </div>
+          <button type="button" (click)="deletePasskey(passkey)" class="rounded-lg border border-[#b42318] px-3.5 py-2 font-bold text-[#b42318]">{{ 'AdminSecurity.RemoveButton' | translate }}</button>
+        </div>
+      }
+    </div>
+  </section>
+</main>

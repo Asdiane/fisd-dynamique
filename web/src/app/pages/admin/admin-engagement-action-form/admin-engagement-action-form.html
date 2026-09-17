@@ -1,0 +1,132 @@
+<main class="mx-auto my-10 max-w-[900px] px-[22px] pb-[60px]">
+  <a routerLink="/admin/engagement" class="mb-4 inline-flex items-center gap-1.5 font-bold text-primary">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M15 6l-6 6 6 6" /></svg>
+    {{ 'AdminEngagementActions.YourActions' | translate }}
+  </a>
+
+  <app-admin-page-header
+    [eyebrow]="'AdminEngagementActions.Eyebrow' | translate"
+    [title]="editingId ? ('AdminEngagementActions.EditTitle' | translate) : ('AdminEngagementActions.NewTitle' | translate)">
+  </app-admin-page-header>
+
+  <form (ngSubmit)="save()" class="mt-6 rounded-[22px] border border-line bg-white p-8 sm:p-10">
+    <app-form-steps [steps]="steps" [current]="currentStep()"></app-form-steps>
+
+    <div class="grid gap-6">
+      @if (currentStep() === 0) {
+        <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+          <span class="inline-flex items-center">
+            {{ 'AdminEngagementActions.FieldAnchor' | translate }}
+            <app-admin-help-tip [text]="'AdminEngagementActions.HelpAnchor' | translate"></app-admin-help-tip>
+          </span>
+          <input name="anchor" maxlength="100" required [(ngModel)]="anchor" class="w-full max-w-[220px] rounded-lg border border-slate-400 p-3 text-ink" />
+        </label>
+
+        <div class="flex gap-2 border-b border-line">
+          <button type="button" (click)="activeLang.set('fr')" class="border-b-2 px-3 pb-2.5 text-[0.9rem] font-bold transition-colors"
+            [class]="activeLang() === 'fr' ? 'border-primary text-primary' : 'border-transparent text-muted'">Français</button>
+          <button type="button" (click)="activeLang.set('en')" class="border-b-2 px-3 pb-2.5 text-[0.9rem] font-bold transition-colors"
+            [class]="activeLang() === 'en' ? 'border-primary text-primary' : 'border-transparent text-muted'">English</button>
+        </div>
+
+        @if (activeLang() === 'fr') {
+          <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+            {{ 'AdminEngagementActions.FieldTitle' | translate }}
+            <input name="titleFr" maxlength="300" required [(ngModel)]="titleFr" class="w-full rounded-lg border border-slate-400 p-3.5 text-[0.98rem] text-ink" />
+          </label>
+
+          <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+            {{ 'AdminEngagementActions.FieldText' | translate }}
+            <textarea name="textFr" rows="3" required [(ngModel)]="textFr" class="w-full resize-y rounded-lg border border-slate-400 p-3.5 text-[0.98rem] leading-[1.6] text-ink"></textarea>
+          </label>
+
+          <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+            {{ 'AdminEngagementActions.FieldDetail' | translate }}
+            <textarea name="detailFr" rows="2" required [(ngModel)]="detailFr" class="w-full resize-y rounded-lg border border-slate-400 p-3.5 text-[0.98rem] leading-[1.6] text-ink"></textarea>
+          </label>
+        } @else {
+          <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+            {{ 'AdminEngagementActions.FieldTitle' | translate }}
+            <input name="titleEn" maxlength="300" required [(ngModel)]="titleEn" class="w-full rounded-lg border border-slate-400 p-3.5 text-[0.98rem] text-ink" />
+          </label>
+
+          <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+            {{ 'AdminEngagementActions.FieldText' | translate }}
+            <textarea name="textEn" rows="3" required [(ngModel)]="textEn" class="w-full resize-y rounded-lg border border-slate-400 p-3.5 text-[0.98rem] leading-[1.6] text-ink"></textarea>
+          </label>
+
+          <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+            {{ 'AdminEngagementActions.FieldDetail' | translate }}
+            <textarea name="detailEn" rows="2" required [(ngModel)]="detailEn" class="w-full resize-y rounded-lg border border-slate-400 p-3.5 text-[0.98rem] leading-[1.6] text-ink"></textarea>
+          </label>
+        }
+      }
+
+      @if (currentStep() === 1) {
+        <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+          {{ 'AdminEngagementActions.FieldIcon' | translate }}
+          <input name="icon" maxlength="20" required [(ngModel)]="icon" class="w-full max-w-[140px] rounded-lg border border-slate-400 p-3 text-ink" />
+        </label>
+
+        <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+          {{ 'AdminEngagementActions.FieldLink' | translate }}
+          <input name="link" maxlength="1000" required [(ngModel)]="link" class="w-full rounded-lg border border-slate-400 p-3.5 text-[0.98rem] text-ink" />
+        </label>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+            {{ 'AdminEngagementActions.FieldCta' | translate }} (FR)
+            <input name="ctaFr" maxlength="200" required [(ngModel)]="ctaFr" class="w-full rounded-lg border border-slate-400 p-3.5 text-[0.98rem] text-ink" />
+          </label>
+          <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+            {{ 'AdminEngagementActions.FieldCta' | translate }} (EN)
+            <input name="ctaEn" maxlength="200" required [(ngModel)]="ctaEn" class="w-full rounded-lg border border-slate-400 p-3.5 text-[0.98rem] text-ink" />
+          </label>
+        </div>
+
+        <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+          {{ 'AdminPillars.FieldImage' | translate }}
+          <input name="image" type="file" accept="image/jpeg,image/png,image/webp" (change)="onImageSelected($event)" class="text-ink" />
+        </label>
+
+        @if (imagePreviewUrl) {
+          <img [src]="imagePreviewUrl" alt="" class="h-32 w-full rounded-lg object-cover" />
+        }
+      }
+
+      @if (currentStep() === 2) {
+        <div class="flex flex-wrap items-end gap-6">
+          <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+            {{ 'AdminContacts.FieldDisplayOrder' | translate }}
+            <input name="displayOrder" type="number" min="1" [(ngModel)]="displayOrder" class="w-full max-w-[140px] rounded-lg border border-slate-400 p-3.5 text-[0.98rem] text-ink" />
+          </label>
+
+          <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+            {{ 'Common.FieldStatus' | translate }}
+            <app-select name="status" [(ngModel)]="status" [options]="statusOptions" triggerClass="min-w-[160px] rounded-lg border border-slate-400 bg-white p-3.5 font-normal text-ink"></app-select>
+          </label>
+
+          <label class="flex items-center gap-2.5 font-semibold text-slate-700">
+            <input name="isVisible" type="checkbox" [(ngModel)]="isVisible" class="h-5 w-5" />
+            {{ 'AdminContacts.FieldVisible' | translate }}
+          </label>
+        </div>
+      }
+    </div>
+
+    <div class="mt-8 flex flex-wrap items-center gap-3 border-t border-line pt-6">
+      @if (currentStep() > 0) {
+        <button type="button" (click)="previousStep()" class="rounded-lg border border-slate-400 px-4 py-2.5 font-bold text-ink">{{ 'Common.Previous' | translate }}</button>
+      }
+      @if (currentStep() < steps.length - 1) {
+        <button type="button" (click)="nextStep()" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white">{{ 'Common.Next' | translate }}</button>
+      } @else {
+        <button type="submit" [disabled]="busy()" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white disabled:cursor-wait disabled:opacity-50">{{ 'AdminContacts.Save' | translate }}</button>
+      }
+      <a routerLink="/admin/engagement" class="rounded-lg border border-primary px-4 py-2.5 font-bold text-primary">{{ 'AdminContacts.Cancel' | translate }}</a>
+      @if (editingId) {
+        <button type="button" [disabled]="busy()" (click)="delete()" class="ml-auto rounded-lg border border-[#b42318] px-4 py-2.5 font-bold text-[#b42318] disabled:cursor-wait disabled:opacity-50">{{ 'AdminParticipants.DeleteButton' | translate }}</button>
+      }
+    </div>
+  </form>
+</main>

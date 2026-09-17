@@ -1,0 +1,37 @@
+<main class="mx-auto my-10 max-w-[1000px] px-[22px] pb-[60px]">
+  <app-admin-page-header
+    [eyebrow]="'AdminSouvenirs.Eyebrow' | translate"
+    [title]="'AdminSouvenirs.Title' | translate"
+    [subtitle]="'AdminSouvenirs.Subtitle' | translate">
+  </app-admin-page-header>
+
+  <app-admin-info-card
+    [title]="'AdminSouvenirs.InfoTitle' | translate"
+    [description]="'AdminSouvenirs.InfoBody' | translate">
+  </app-admin-info-card>
+
+  <section>
+    <div class="my-6 flex flex-wrap items-center gap-3">
+      <h2 class="m-0 mr-auto text-ink">{{ 'AdminSouvenirs.YourEditions' | translate }}</h2>
+      <a routerLink="new" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white">{{ 'AdminSouvenirs.NewEdition' | translate }}</a>
+    </div>
+
+    @if (!loading() && souvenirs().length === 0) {
+      <app-nodata [title]="'AdminSouvenirs.EmptyState' | translate"></app-nodata>
+    }
+
+    <div class="grid gap-2.5">
+      @for (souvenir of souvenirs(); track souvenir.id) {
+        <div class="flex flex-wrap items-center gap-4 rounded-xl border border-line bg-white p-4">
+          <div class="min-w-0 flex-1">
+            <strong class="block break-words text-ink">{{ souvenir.year }} · {{ souvenir.title }}</strong>
+            <small class="text-muted">{{ souvenir.status === SouvenirStatus.Published ? ('AdminSouvenirs.StatusPublished' | translate) : ('AdminSouvenirs.StatusComingSoon' | translate) }}</small>
+          </div>
+          <a [routerLink]="[souvenir.id]" class="rounded-lg border border-primary px-3.5 py-2 font-bold text-primary">{{ 'AdminSouvenirs.Photos' | translate }}</a>
+          <a [routerLink]="[souvenir.id, 'edit']" class="rounded-lg border border-primary px-3.5 py-2 font-bold text-primary">{{ 'AdminContacts.EditButton' | translate }}</a>
+          <button type="button" (click)="deleteSouvenir(souvenir)" class="rounded-lg border border-[#b42318] px-3.5 py-2 font-bold text-[#b42318]">{{ 'AdminContacts.DeleteButton' | translate }}</button>
+        </div>
+      }
+    </div>
+  </section>
+</main>

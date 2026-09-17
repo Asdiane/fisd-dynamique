@@ -1,0 +1,45 @@
+<main class="mx-auto my-10 max-w-[1000px] px-[22px] pb-[60px]">
+  <app-admin-page-header
+    [eyebrow]="'AdminEditions.Eyebrow' | translate"
+    [title]="'AdminEditions.Title' | translate"
+    [subtitle]="'AdminEditions.Subtitle' | translate">
+  </app-admin-page-header>
+
+  <app-admin-info-card
+    [title]="'AdminEditions.InfoTitle' | translate"
+    [description]="'AdminEditions.InfoBody' | translate">
+  </app-admin-info-card>
+
+  <section>
+    <div class="my-6 flex flex-wrap items-center gap-3">
+      <h2 class="m-0 mr-auto text-ink">{{ 'AdminEditions.YourEditions' | translate }}</h2>
+      <a routerLink="new" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white">{{ 'AdminEditions.NewEdition' | translate }}</a>
+    </div>
+
+    @if (!loading() && editions().length === 0) {
+      <app-nodata [title]="'AdminEditions.EmptyState' | translate"></app-nodata>
+    }
+
+    <div class="grid gap-2.5">
+      @for (edition of editions(); track edition.id) {
+        <div class="flex flex-wrap items-center gap-4 rounded-xl border border-line bg-white p-4">
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-wrap items-center gap-2">
+              <strong class="block break-words text-ink">{{ edition.year }} · {{ edition.titleFr }}</strong>
+              @if (edition.isCurrent) {
+                <span class="rounded-full bg-primary-100 px-2.5 py-0.5 text-[0.72rem] font-bold uppercase tracking-wide text-primary-700">{{ 'AdminEditions.Current' | translate }}</span>
+              }
+            </div>
+            <small class="text-muted">{{ edition.isVisible ? ('AdminEditions.Visible' | translate) : ('AdminEditions.Hidden' | translate) }} · {{ edition.status === 'published' ? ('Common.StatusPublished' | translate) : ('Common.StatusDraft' | translate) }}</small>
+          </div>
+          @if (!edition.isCurrent) {
+            <button type="button" [disabled]="settingCurrentId() === edition.id" (click)="setCurrent(edition)" class="rounded-lg border border-slate-400 px-3.5 py-2 font-bold text-ink disabled:cursor-wait disabled:opacity-50">{{ 'AdminEditions.SetCurrentButton' | translate }}</button>
+          }
+          <a [routerLink]="[edition.id]" class="rounded-lg border border-primary px-3.5 py-2 font-bold text-primary">{{ 'AdminEditions.ManageProgram' | translate }}</a>
+          <a [routerLink]="[edition.id, 'edit']" class="rounded-lg border border-primary px-3.5 py-2 font-bold text-primary">{{ 'AdminContacts.EditButton' | translate }}</a>
+          <button type="button" (click)="deleteEdition(edition)" class="rounded-lg border border-[#b42318] px-3.5 py-2 font-bold text-[#b42318]">{{ 'AdminContacts.DeleteButton' | translate }}</button>
+        </div>
+      }
+    </div>
+  </section>
+</main>

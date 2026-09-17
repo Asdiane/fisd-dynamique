@@ -1,0 +1,142 @@
+<main class="mx-auto my-10 max-w-[1200px] px-[22px] pb-[60px]">
+  <a routerLink="/admin/editions" class="mb-4 inline-flex items-center gap-1.5 font-bold text-primary">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M15 6l-6 6 6 6" /></svg>
+    {{ 'AdminEditions.YourEditions' | translate }}
+  </a>
+
+  @if (loading()) {
+    <p class="text-muted">…</p>
+  } @else if (!edition()) {
+    <app-nodata [title]="'AdminEditions.EmptyState' | translate"></app-nodata>
+  } @else {
+    <app-admin-page-header
+      [eyebrow]="'AdminEditions.Eyebrow' | translate"
+      [title]="edition()!.year + ' · ' + edition()!.titleFr"
+      [subtitle]="edition()!.badgeFr">
+    </app-admin-page-header>
+
+    <app-admin-info-card
+      [title]="'AdminEditions.DetailInfoTitle' | translate"
+      [description]="'AdminEditions.DetailInfoBody' | translate">
+    </app-admin-info-card>
+
+    <section class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(280px,0.85fr)_minmax(0,1.15fr)]">
+      <div>
+        <div class="mb-3.5 flex flex-wrap items-center gap-3">
+          <h2 class="m-0 mr-auto text-[1.2rem] text-ink">{{ 'AdminEditions.ProgramFor' | translate }}</h2>
+          <button type="button" (click)="newDay()" class="rounded-lg bg-primary px-3.5 py-2 text-[0.88rem] font-bold text-white">{{ 'AdminEditions.NewDay' | translate }}</button>
+        </div>
+
+        @if (!daysLoading() && days().length === 0) {
+          <p class="text-muted">{{ 'AdminEditions.NoDays' | translate }}</p>
+        }
+
+        <div class="grid gap-2">
+          @for (day of days(); track day.id) {
+            <button
+              type="button"
+              (click)="selectDay(day)"
+              [class]="'flex items-center gap-3 rounded-xl border bg-white p-3.5 text-left transition-colors ' + (selectedDay()?.id === day.id ? 'border-primary shadow-[0_8px_20px_rgba(0,0,255,0.1)]' : 'border-line hover:border-primary/40')">
+              <div class="min-w-0 flex-1">
+                <strong class="block break-words text-ink">{{ day.label }}</strong>
+                <small class="text-muted">{{ day.dateLabel }}</small>
+              </div>
+              <span class="shrink-0 rounded-lg p-1.5 text-primary hover:bg-primary/10" (click)="editDay(day); $event.stopPropagation()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg>
+              </span>
+              <span class="shrink-0 rounded-lg p-1.5 text-[#b42318] hover:bg-[#b42318]/10" (click)="deleteDay(day); $event.stopPropagation()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M3 6h18" /><path d="M8 6V4h8v2" /><path d="M19 6l-1 14H6L5 6" /></svg>
+              </span>
+            </button>
+          }
+        </div>
+
+        @if (dayEditorOpen()) {
+          <form (ngSubmit)="saveDay()" class="mt-4 grid gap-3 rounded-xl border border-line bg-white p-4">
+            <label class="grid gap-1.5 text-[0.9rem] font-semibold text-slate-700">
+              {{ 'AdminEditions.FieldDayLabel' | translate }}
+              <input name="dayLabel" required [(ngModel)]="dayLabel" class="w-full rounded-lg border border-slate-400 p-2.5 text-ink" />
+            </label>
+            <label class="grid gap-1.5 text-[0.9rem] font-semibold text-slate-700">
+              {{ 'AdminEditions.FieldDateLabel' | translate }}
+              <input name="dayDateLabel" required [(ngModel)]="dayDateLabel" class="w-full rounded-lg border border-slate-400 p-2.5 text-ink" />
+            </label>
+            <label class="grid max-w-[140px] gap-1.5 text-[0.9rem] font-semibold text-slate-700">
+              {{ 'AdminEditions.FieldDisplayOrder' | translate }}
+              <input name="dayDisplayOrder" type="number" min="1" [(ngModel)]="dayDisplayOrder" class="w-full rounded-lg border border-slate-400 p-2.5 text-ink" />
+            </label>
+            <div class="flex flex-wrap items-center gap-3">
+              <button type="submit" [disabled]="busy()" class="rounded-lg bg-primary px-3.5 py-2 text-[0.9rem] font-bold text-white disabled:cursor-wait disabled:opacity-50">{{ 'AdminContacts.Save' | translate }}</button>
+              <button type="button" (click)="cancelDayEdit()" class="rounded-lg border border-primary px-3.5 py-2 text-[0.9rem] font-bold text-primary">{{ 'AdminContacts.Cancel' | translate }}</button>
+            </div>
+          </form>
+        }
+      </div>
+
+      <div class="rounded-[18px] border border-line bg-white p-6">
+        @if (!selectedDay()) {
+          <p class="text-muted">{{ 'AdminEditions.SelectADay' | translate }}</p>
+        } @else {
+          <div class="mb-4 flex flex-wrap items-center gap-3">
+            <h2 class="m-0 mr-auto text-[1.2rem] text-ink">{{ 'AdminEditions.ScheduleFor' | translate }} {{ selectedDay()!.label }}</h2>
+            <button type="button" (click)="newScheduleItem()" class="rounded-lg bg-primary px-3.5 py-2 text-[0.88rem] font-bold text-white">{{ 'AdminEditions.NewScheduleItem' | translate }}</button>
+          </div>
+
+          @if (!scheduleLoading() && scheduleItems().length === 0) {
+            <p class="text-muted">{{ 'AdminEditions.NoScheduleItems' | translate }}</p>
+          }
+
+          <div class="grid gap-2.5">
+            @for (item of scheduleItems(); track item.id) {
+              <div class="flex flex-wrap items-center gap-3.5 rounded-xl border border-line bg-slate-50 p-3.5">
+                <div class="min-w-0 flex-1">
+                  <strong class="block break-words text-ink">{{ item.time }} · {{ item.title }}</strong>
+                  <small class="text-muted">{{ item.tag }}@if (item.location) { · {{ item.location }} }</small>
+                </div>
+                <button type="button" (click)="editScheduleItem(item)" class="rounded-lg border border-primary px-3 py-1.5 text-[0.85rem] font-bold text-primary">{{ 'AdminContacts.EditButton' | translate }}</button>
+                <button type="button" (click)="deleteScheduleItem(item)" class="rounded-lg border border-[#b42318] px-3 py-1.5 text-[0.85rem] font-bold text-[#b42318]">{{ 'AdminContacts.DeleteButton' | translate }}</button>
+              </div>
+            }
+          </div>
+
+          @if (itemEditorOpen()) {
+            <form (ngSubmit)="saveScheduleItem()" class="mt-4 grid gap-3 rounded-xl border border-line bg-slate-50 p-4">
+              <div class="grid gap-3 sm:grid-cols-2">
+                <label class="grid gap-1.5 text-[0.9rem] font-semibold text-slate-700">
+                  {{ 'AdminEditions.FieldTime' | translate }}
+                  <input name="itemTime" required [(ngModel)]="itemTime" class="w-full rounded-lg border border-slate-400 p-2.5 text-ink" />
+                </label>
+                <label class="grid gap-1.5 text-[0.9rem] font-semibold text-slate-700">
+                  {{ 'AdminEditions.FieldTag' | translate }}
+                  <input name="itemTag" [(ngModel)]="itemTag" class="w-full rounded-lg border border-slate-400 p-2.5 text-ink" />
+                </label>
+              </div>
+              <label class="grid gap-1.5 text-[0.9rem] font-semibold text-slate-700">
+                {{ 'AdminEditions.FieldItemTitle' | translate }}
+                <input name="itemTitle" required [(ngModel)]="itemTitle" class="w-full rounded-lg border border-slate-400 p-2.5 text-ink" />
+              </label>
+              <label class="grid gap-1.5 text-[0.9rem] font-semibold text-slate-700">
+                {{ 'AdminEditions.FieldDetail' | translate }}
+                <textarea name="itemDetail" rows="2" [(ngModel)]="itemDetail" class="w-full resize-y rounded-lg border border-slate-400 p-2.5 leading-[1.5] text-ink"></textarea>
+              </label>
+              <div class="grid gap-3 sm:grid-cols-2">
+                <label class="grid gap-1.5 text-[0.9rem] font-semibold text-slate-700">
+                  {{ 'AdminEditions.FieldItemLocation' | translate }}
+                  <input name="itemLocation" [(ngModel)]="itemLocation" class="w-full rounded-lg border border-slate-400 p-2.5 text-ink" />
+                </label>
+                <label class="grid gap-1.5 text-[0.9rem] font-semibold text-slate-700">
+                  {{ 'AdminEditions.FieldDisplayOrder' | translate }}
+                  <input name="itemDisplayOrder" type="number" min="1" [(ngModel)]="itemDisplayOrder" class="w-full rounded-lg border border-slate-400 p-2.5 text-ink" />
+                </label>
+              </div>
+              <div class="flex flex-wrap items-center gap-3">
+                <button type="submit" [disabled]="busy()" class="rounded-lg bg-primary px-3.5 py-2 text-[0.9rem] font-bold text-white disabled:cursor-wait disabled:opacity-50">{{ 'AdminContacts.Save' | translate }}</button>
+                <button type="button" (click)="cancelItemEdit()" class="rounded-lg border border-primary px-3.5 py-2 text-[0.9rem] font-bold text-primary">{{ 'AdminContacts.Cancel' | translate }}</button>
+              </div>
+            </form>
+          }
+        }
+      </div>
+    </section>
+  }
+</main>

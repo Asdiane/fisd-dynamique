@@ -1,0 +1,11 @@
+<section class="relative overflow-hidden bg-[linear-gradient(135deg,#000022,#0000AA,#0000FF)] py-[clamp(44px,6vw,76px)] text-white shadow-[inset_0_-70px_100px_-40px_rgba(0,0,255,0.35)]">
+  @if (image()) {
+    <img [src]="image()" alt="" class="absolute inset-0 h-full w-full scale-105 object-cover opacity-40" />
+    <div class="absolute inset-0 bg-[linear-gradient(115deg,rgba(0,0,34,0.94),rgba(0,0,170,0.82)_55%,rgba(0,0,255,0.55))]"></div>
+  }
+  <div class="relative mx-auto w-[min(1180px,calc(100%-36px))]">
+    <p class="mb-3.5 text-[0.82rem] font-black uppercase tracking-[0.18em] text-blue-100">{{ eyebrow() }}</p>
+    <h1 class="m-0 text-[clamp(2.1rem,4vw,4.4rem)] leading-[1.04] text-white">{{ title() }}</h1>
+    <p class="mt-5 max-w-[720px] text-[1.08rem] leading-[1.8] text-blue-100">{{ description() }}</p>
+  </div>
+</section>

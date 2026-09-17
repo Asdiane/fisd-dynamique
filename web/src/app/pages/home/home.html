@@ -1,0 +1,389 @@
+<section
+  class="fisd-hero relative grid overflow-hidden bg-primary-900 text-white shadow-[inset_0_-70px_100px_-40px_rgba(0,0,255,0.35)]"
+>
+  <div class="hero-tagline absolute inset-x-0 z-20 px-5 text-center">
+    <div
+      [appTilt3d]="8"
+      class="mx-auto grid max-w-[280px] justify-items-center gap-0.5 rounded-2xl border border-white/20 bg-white/10 px-4 py-2 text-[0.78rem] font-bold leading-tight text-white/90 backdrop-blur-md sm:inline-flex sm:max-w-none sm:flex-row sm:items-center sm:gap-1.5 sm:rounded-full sm:px-4 sm:py-2 sm:text-[1rem]"
+    >
+      <span>{{ 'Home.TaglinePrefix' | translate }}</span>
+      <app-typewriter [phrases]="taglinePhrases"></app-typewriter>
+    </div>
+  </div>
+
+  @for (slide of slides(); track slide.title; let i = $index) {
+    <div
+      class="absolute inset-0 transition-all duration-[850ms] ease-in-out"
+      [class]="i === activeSlide() ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.01]'"
+    >
+      <img
+        [src]="slide.image"
+        [alt]="slide.title"
+        [style.object-position]="slide.focalPoint || 'center'"
+        class="hero-image object-cover"
+      />
+      <div
+        class="absolute inset-0 bg-[linear-gradient(0deg,rgba(4,6,20,0.88),rgba(10,12,28,0.35),transparent),linear-gradient(90deg,rgba(4,6,20,0.7),rgba(4,6,20,0.1))]"
+      ></div>
+    </div>
+  }
+
+  @for (slide of slides(); track slide.title; let i = $index) {
+    <div
+      class="hero-content relative z-10 col-start-1 row-start-1 grid px-5 text-left sm:px-[6vw]"
+      [class.invisible]="i !== activeSlide()"
+    >
+      <div class="hero-copy">
+        <div class="mb-5 inline-flex flex-wrap justify-start gap-2.5">
+          <span
+            [appTilt3d]="10"
+            class="rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-[0.92rem] font-extrabold text-white backdrop-blur-md"
+            >{{ slide.kicker }}</span
+          >
+          @if (slide.place) {
+            <span
+              [appTilt3d]="10"
+              class="rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-[0.92rem] font-extrabold text-white backdrop-blur-md"
+              >{{ slide.place }}</span
+            >
+          }
+        </div>
+        <h1
+          class="max-w-[760px] leading-[1.05] [text-shadow:0_8px_34px_rgba(0,0,0,0.45)]"
+          [style.font-size]="heroTitleSize(slide.title)"
+        >
+          {{ slide.title }}
+        </h1>
+        <p
+          class="mt-5 max-w-[640px] text-[clamp(1.06rem,2vw,1.35rem)] leading-[1.7] text-white/[92%]"
+        >
+          {{ slide.text }}
+        </p>
+        <div class="mt-8 flex flex-wrap justify-start gap-3.5">
+          <a
+            routerLink="/reservation"
+            class="min-h-[46px] rounded-[14px] bg-[linear-gradient(90deg,#0000cc,#0000FF,#3785ff)] px-[18px] py-3 font-extrabold text-white shadow-[0_14px_40px_rgba(0,0,255,0.24)]"
+            >{{ 'Home.HeroReserve' | translate }}</a
+          >
+          <a
+            routerLink="/programmation"
+            class="min-h-[46px] rounded-[14px] bg-white px-[18px] py-3 font-extrabold text-primary shadow-card"
+            >{{ 'Home.HeroDiscover' | translate }}</a
+          >
+          <a
+            routerLink="/galerie"
+            class="min-h-[46px] rounded-[14px] border border-white/[48%] bg-white/[8%] px-[18px] py-3 font-extrabold text-white backdrop-blur-md"
+            >{{ 'Home.HeroPastEditions' | translate }}</a
+          >
+        </div>
+        <div class="mt-9 flex justify-start gap-3">
+          @for (dotSlide of slides(); track dotSlide.title; let di = $index) {
+            <button
+              type="button"
+              (click)="goToSlide(di)"
+              [attr.aria-label]="'Slide ' + (di + 1)"
+              [class]="
+                'h-3 rounded-full bg-white/45 transition-all duration-200 ' +
+                (di === activeSlide()
+                  ? 'w-[42px] bg-white shadow-[0_30px_70px_rgba(0,0,34,0.4)]'
+                  : 'w-3')
+              "
+            ></button>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</section>
+
+@for (section of editorial.content().sections; track section.id) {
+  @if (section.visible) {
+    @switch (section.kind) {
+      @case ('theme') {
+        <section id="presentation" class="scroll-mt-24 py-[clamp(44px,6vw,76px)]">
+          <div
+            class="mx-auto grid w-[min(1180px,calc(100%-36px))] grid-cols-1 items-start gap-9 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]"
+          >
+            <div [appScrollReveal]="0" appScrollRevealVariant="left">
+              <app-section-title
+                [eyebrow]="'Home.PresentationEyebrow' | translate"
+                [title]="'Home.PresentationTitle' | translate"
+              >
+              </app-section-title>
+              <p class="mt-6 text-[1.07rem] leading-[1.85] text-muted">
+                {{ 'Home.PresentationParagraph1' | translate }}
+              </p>
+              <div
+                class="grid transition-[grid-template-rows] duration-300 ease-out"
+                [style.grid-template-rows]="presentationExpanded() ? '1fr' : '0fr'"
+              >
+                <div class="overflow-hidden">
+                  <p class="mt-4 text-[1.07rem] leading-[1.85] text-muted">
+                    {{ 'Home.PresentationParagraph2' | translate }}
+                  </p>
+                  <p class="mt-4 text-[1.07rem] leading-[1.85] text-muted">
+                    {{ 'Home.PresentationParagraph3' | translate }}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                (click)="togglePresentation()"
+                class="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 font-extrabold text-white shadow-[0_14px_32px_rgba(0,0,255,0.2)]"
+              >
+                {{
+                  (presentationExpanded()
+                    ? 'Home.PresentationLessLabel'
+                    : 'Home.PresentationMoreLabel'
+                  ) | translate
+                }}
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  [class]="
+                    'h-4 w-4 transition-transform duration-200 ' +
+                    (presentationExpanded() ? 'rotate-180' : '')
+                  "
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div
+              [appScrollReveal]="120"
+              appScrollRevealVariant="flip"
+              class="rounded-[30px] bg-[linear-gradient(135deg,#000022,#0000AA,#0000FF)] p-[clamp(28px,4vw,44px)] text-white shadow-[0_28px_70px_rgba(0,0,255,0.18)]"
+            >
+              <div
+                class="mx-auto mb-7 flex min-h-[96px] w-[min(330px,100%)] items-center justify-center rounded-[22px] bg-white/[96%] p-4 shadow-[0_18px_50px_rgba(0,0,0,0.24)]"
+              >
+                <img
+                  [src]="editorial.content().themeImage"
+                  [alt]="'Home.PresentationEyebrow' | translate"
+                  class="aspect-[4/3] w-full rounded-xl object-cover"
+                />
+              </div>
+              <h3 class="m-0 text-[clamp(2rem,4vw,3rem)] leading-[1.08]">
+                {{ 'Home.PanelTitle' | translate }}
+              </h3>
+              <p class="mt-4 text-[1.07rem] leading-[1.8] text-blue-100">
+                {{ 'Home.PanelText' | translate }}
+              </p>
+              <span
+                class="mt-4 inline-flex items-center rounded-full bg-white/10 px-3.5 py-2.5 text-white/[92%]"
+                >{{ 'Home.PanelTag' | translate }}</span
+              >
+            </div>
+          </div>
+        </section>
+      }
+      @case ('program') {
+        <section id="programme" class="bg-surface py-16">
+          <div class="mx-auto w-[min(1180px,calc(100%-36px))]">
+            <app-section-title
+              [eyebrow]="'Home.ProgramTitle' | translate"
+              [title]="'Home.ProgramTitle' | translate"
+              [description]="'Home.ProgramIntro' | translate"
+            ></app-section-title>
+            <div class="mt-8 grid gap-6 md:grid-cols-3">
+              @for (day of [1, 2, 3]; track day) {
+                <article class="rounded-[28px] border border-line bg-white p-7 shadow-card">
+                  <span class="text-sm font-black uppercase tracking-widest text-primary"
+                    >{{ 'Home.ProgramDay' | translate }} 0{{ day }}</span
+                  >
+                  <h3 class="mt-5 text-2xl">{{ 'Home.ProgramDay' + day | translate }}</h3>
+                </article>
+              }
+            </div>
+            <a
+              routerLink="/programmation/2026"
+              class="mt-8 inline-flex rounded-2xl bg-primary px-6 py-3 font-bold text-white"
+              >{{ 'Home.ProgramButton' | translate }}</a
+            >
+          </div>
+        </section>
+      }
+      @case ('speakers') {
+        <section id="speakers" class="scroll-mt-24 bg-white py-[clamp(44px,6vw,76px)]">
+          <div [appScrollReveal]="0" class="mx-auto w-[min(1180px,calc(100%-36px))]">
+            <app-section-title
+              [eyebrow]="'Home.SpeakersEyebrow' | translate"
+              [title]="'Home.SpeakersTitle' | translate"
+              [description]="speakers().length ? '' : ('Home.SpeakersDescription' | translate)"
+            >
+            </app-section-title>
+            @if (speakers().length) {
+              <app-speaker-spotlight [speakers]="speakers()"></app-speaker-spotlight>
+            }
+          </div>
+        </section>
+      }
+      @case ('stats') {
+        <section class="relative overflow-hidden py-[clamp(56px,8vw,88px)]">
+          <div
+            class="absolute inset-0 flex transition-transform duration-[1100ms] ease-in-out"
+            [style.transform]="'translateX(-' + statsBgIndex() * 100 + '%)'"
+          >
+            @for (bgImage of statsBgImages; track bgImage; let bi = $index) {
+              <div class="relative h-full w-full shrink-0 overflow-hidden">
+                <img
+                  [src]="bgImage"
+                  alt=""
+                  class="h-full w-full object-cover"
+                  [class]="
+                    bi === statsBgIndex()
+                      ? bi % 2 === 0
+                        ? 'stats-bg-slide-active-even'
+                        : 'stats-bg-slide-active-odd'
+                      : ''
+                  "
+                />
+              </div>
+            }
+          </div>
+          <div
+            class="absolute inset-0 bg-[linear-gradient(155deg,rgba(4,6,20,0.72),rgba(10,12,28,0.58),rgba(4,6,20,0.5))]"
+          ></div>
+
+          <div
+            [appScrollReveal]="0"
+            class="relative z-10 mx-auto w-[min(1180px,calc(100%-36px))] text-center"
+          >
+            <div class="mx-auto max-w-[780px]">
+              <p class="mb-3.5 text-[0.82rem] font-black uppercase tracking-[0.18em] text-blue-100">
+                {{ 'Home.StatsEyebrow' | translate }}
+              </p>
+              <h2
+                class="m-0 min-h-[2.2em] text-[clamp(2.1rem,4vw,4.4rem)] leading-[1.04] text-white"
+              >
+                {{ 'Home.StatsTitle' | translate }}
+              </h2>
+            </div>
+            <div class="mt-11">
+              <div class="flex flex-wrap justify-center gap-10 md:gap-20">
+                @for (stat of editorial.content().stats; track $index) {
+                  <div>
+                    <p class="text-4xl font-black text-white">{{ stat.value }}{{ stat.suffix }}</p>
+                    <p class="mt-2 text-blue-100">
+                      {{ editorial.local(stat.labelFr, stat.labelEn) }}
+                    </p>
+                  </div>
+                }
+              </div>
+            </div>
+            <div class="mx-auto mt-10 max-w-[1000px]">
+              <p class="mb-5 font-bold text-white">{{ 'Home.CountdownTitle' | translate }}</p>
+              <app-countdown [targetDate]="countdownDate()"></app-countdown>
+            </div>
+          </div>
+        </section>
+      }
+      @case ('pillars') {
+        <section id="objectifs" class="scroll-mt-24 bg-white py-[clamp(44px,6vw,76px)]">
+          <div class="mx-auto w-[min(1180px,calc(100%-36px))]">
+            <app-section-title
+              [eyebrow]="'Home.PillarsEyebrow' | translate"
+              [title]="'Home.PillarsTitle' | translate"
+            >
+            </app-section-title>
+            <p class="mt-6 max-w-[950px] text-lg leading-relaxed text-muted">
+              {{ 'Home.PillarsIntro' | translate }}
+            </p>
+            <div class="mt-8 grid gap-6 md:grid-cols-3">
+              @for (
+                key of ['Home.Pillar1', 'Home.Pillar2', 'Home.Pillar3'];
+                track key;
+                let i = $index
+              ) {
+                <article
+                  class="overflow-hidden rounded-[28px] border border-line bg-white shadow-card"
+                >
+                  <img
+                    [src]="pillarImages[i]"
+                    alt=""
+                    class="aspect-[16/10] w-full object-cover"
+                    loading="lazy"
+                  />
+                  <div class="p-7">
+                    <span class="font-black text-primary">0{{ i + 1 }}</span>
+                    <h3 class="mt-3 text-xl">{{ key | translate }}</h3>
+                  </div>
+                </article>
+              }
+            </div>
+          </div>
+        </section>
+      }
+      @case ('testimonials') {
+        <section id="temoignages" class="bg-surface py-16">
+          <div class="mx-auto w-[min(1180px,calc(100%-36px))]">
+            <app-section-title
+              [eyebrow]="'Gallery.TestimonialsEyebrow' | translate"
+              [title]="'Gallery.TestimonialsTitle' | translate"
+            ></app-section-title>
+            <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              @for (testimonial of testimonials(); track testimonial.authorName) {
+                <figure class="rounded-[28px] border border-line bg-white p-7 shadow-card">
+                  @if (testimonial.imageUrl) {
+                    <img
+                      [src]="testimonial.imageUrl"
+                      [alt]="testimonial.authorName"
+                      class="mb-5 h-20 w-20 rounded-full object-cover"
+                      loading="lazy"
+                    />
+                  }
+                  <blockquote class="leading-relaxed text-muted">
+                    {{ testimonial.content }}
+                  </blockquote>
+                  <figcaption class="mt-6">
+                    <strong>{{ testimonial.authorName }}</strong>
+                    <p class="mt-1 text-sm text-muted">{{ testimonial.authorRole }}</p>
+                  </figcaption>
+                </figure>
+              }
+            </div>
+          </div>
+        </section>
+      }
+      @case ('partners') {
+        <section id="partners" class="scroll-mt-24 py-[clamp(44px,6vw,76px)]">
+          <div [appScrollReveal]="0" class="mx-auto w-[min(1180px,calc(100%-36px))]">
+            <app-section-title
+              [eyebrow]="'Home.PartnersEyebrow' | translate"
+              [title]="'Home.PartnersTitle' | translate"
+            >
+            </app-section-title>
+            <app-partners-wall [partners]="partners()"></app-partners-wall>
+          </div>
+        </section>
+      }
+      @case ('custom') {
+        <section class="bg-white py-16">
+          <div class="mx-auto w-[min(1180px,calc(100%-36px))]">
+            <h2 class="text-3xl text-ink">
+              {{ editorial.local(section.titleFr, section.titleEn) }}
+            </h2>
+            <p class="mt-5 whitespace-pre-line text-lg leading-relaxed text-muted">
+              {{ editorial.local(section.textFr, section.textEn) }}
+            </p>
+          </div>
+        </section>
+      }
+    }
+    @if (section.buttons.length) {
+      <div class="mx-auto mb-10 flex w-[min(1180px,calc(100%-36px))] flex-wrap gap-3">
+        @for (button of section.buttons; track $index) {
+          <a
+            [routerLink]="button.path"
+            class="rounded-2xl bg-primary px-6 py-3 font-bold text-white"
+            >{{ editorial.local(button.labelFr, button.labelEn) }}</a
+          >
+        }
+      </div>
+    }
+  }
+}

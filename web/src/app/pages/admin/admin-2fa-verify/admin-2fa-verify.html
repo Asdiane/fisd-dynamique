@@ -1,0 +1,48 @@
+<div class="grid min-h-screen place-items-center bg-primary-900 px-5 py-10">
+  <div class="w-full max-w-[400px]">
+    <div class="mb-6 flex justify-center">
+      <div class="inline-flex items-center rounded-2xl bg-white/95 p-3 shadow-[0_18px_40px_rgba(0,0,0,0.24)]">
+        <img src="assets/logos/logo-fisd.png" alt="FISD" class="h-8 w-auto object-contain" />
+      </div>
+    </div>
+
+    <div class="rounded-2xl bg-white p-6 shadow-[0_25px_65px_-15px_rgba(0,0,34,0.35)] sm:p-8">
+      <h1 class="m-0 text-[1.4rem] font-bold text-primary-900">{{ 'AdminTwoFactor.VerifyTitle' | translate }}</h1>
+      <p class="mt-1.5 text-[0.9rem] leading-[1.6] text-muted">{{ 'AdminTwoFactor.VerifySubtitle' | translate }}</p>
+
+      @if (errorMessage()) {
+        <div class="mt-5 flex items-start gap-2 rounded-lg bg-[#fef3f2] px-3.5 py-2.5 text-[0.82rem] font-semibold text-[#b42318]">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="mt-0.5 h-4 w-4 shrink-0"><circle cx="12" cy="12" r="9" /><line x1="12" y1="8" x2="12" y2="13" /><circle cx="12" cy="16.2" r="0.4" fill="currentColor" stroke="none" /></svg>
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
+
+      <form (ngSubmit)="onSubmit()" class="mt-5 grid gap-3.5">
+        <label class="grid gap-1.5">
+          <span class="text-[0.8rem] font-semibold text-slate-700">{{ 'AdminTwoFactor.CodeLabel' | translate }}</span>
+          <input
+            name="code"
+            type="text"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            maxlength="6"
+            required
+            autofocus
+            [(ngModel)]="code"
+            class="h-12 w-full rounded-lg border-0 bg-surface px-3.5 text-center text-[1.3rem] font-bold tracking-[0.4em] text-ink outline-none ring-1 ring-line transition placeholder:tracking-normal placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-primary-300"
+            placeholder="000000" />
+        </label>
+
+        <button
+          type="submit"
+          [disabled]="submitting() || code.trim().length < 6"
+          class="mt-1.5 flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary text-[0.92rem] font-bold tracking-wide text-white transition hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50">
+          @if (submitting()) {
+            <span class="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
+          }
+          {{ 'AdminTwoFactor.VerifySubmit' | translate }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

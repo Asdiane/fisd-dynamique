@@ -1,0 +1,80 @@
+@keyframes countdown-digit-in {
+  from {
+    opacity: 0;
+    transform: translateY(70%) scale(0.85);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.countdown-digit {
+  animation: countdown-digit-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes countdown-sep-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+.countdown-sep span {
+  animation: countdown-sep-pulse 1.6s ease-in-out infinite;
+}
+
+.countdown-sep span:last-child {
+  animation-delay: 0.2s;
+}
+
+@keyframes countdown-shimmer-sweep {
+  0% {
+    transform: translateX(-60%) rotate(8deg);
+  }
+  100% {
+    transform: translateX(160%) rotate(8deg);
+  }
+}
+
+.countdown-shimmer {
+  background: linear-gradient(100deg, transparent 40%, rgba(255, 255, 255, 0.09) 50%, transparent 60%);
+  width: 60%;
+  height: 220%;
+  top: -60%;
+  animation: countdown-shimmer-sweep 5s ease-in-out infinite;
+}
+
+@keyframes countdown-card-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 30px 80px rgba(0, 0, 255, 0.28),
+      0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  }
+  50% {
+    box-shadow:
+      0 30px 90px rgba(55, 133, 255, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  }
+}
+
+.countdown-card {
+  animation: countdown-card-glow 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .countdown-digit,
+  .countdown-sep span,
+  .countdown-shimmer,
+  .countdown-card {
+    animation: none;
+  }
+}

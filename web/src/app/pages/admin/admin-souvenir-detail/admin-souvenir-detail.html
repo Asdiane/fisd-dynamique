@@ -1,0 +1,56 @@
+<main class="mx-auto my-10 max-w-[1000px] px-[22px] pb-[60px]">
+  <a routerLink="/admin/souvenirs" class="mb-4 inline-flex items-center gap-1.5 font-bold text-primary">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M15 6l-6 6 6 6" /></svg>
+    {{ 'AdminSouvenirs.YourEditions' | translate }}
+  </a>
+
+  @if (loading()) {
+    <p class="text-muted">…</p>
+  } @else if (!souvenir()) {
+    <app-nodata [title]="'AdminSouvenirs.EmptyState' | translate"></app-nodata>
+  } @else {
+    <app-admin-page-header
+      [eyebrow]="'AdminSouvenirs.Eyebrow' | translate"
+      [title]="souvenir()!.year + ' · ' + souvenir()!.title">
+    </app-admin-page-header>
+
+    <app-admin-info-card
+      [title]="'AdminSouvenirs.PhotosInfoTitle' | translate"
+      [description]="'AdminSouvenirs.PhotosInfoBody' | translate">
+    </app-admin-info-card>
+
+    <section class="mt-6">
+      @if (!photosLoading() && photos().length === 0) {
+        <p class="text-muted">{{ 'AdminSouvenirs.NoPhotos' | translate }}</p>
+      }
+
+      <div class="grid gap-2.5">
+        @for (photo of photos(); track photo.id) {
+          <div class="flex items-center gap-3.5 rounded-xl border border-line bg-white p-3">
+            <img [src]="photo.imageUrl" alt="" class="h-14 w-20 rounded-lg object-cover" />
+            <div class="min-w-0 flex-1">
+              <small class="block break-words text-ink">{{ photo.caption || photo.imageUrl }}</small>
+            </div>
+            <button type="button" (click)="deletePhoto(photo)" class="rounded-lg border border-[#b42318] px-3 py-1.5 text-[0.88rem] font-bold text-[#b42318]">{{ 'AdminContacts.DeleteButton' | translate }}</button>
+          </div>
+        }
+      </div>
+
+      <div class="mt-6 grid gap-3 rounded-[18px] border border-line bg-white p-6 sm:grid-cols-[1fr_1fr_100px_auto] sm:items-end">
+        <label class="grid gap-2 font-semibold text-slate-700">
+          {{ 'AdminSouvenirs.PhotoImageUrl' | translate }}
+          <input name="photoImageUrl" [(ngModel)]="newPhotoImageUrl" class="w-full rounded-lg border border-slate-400 p-3 text-ink" />
+        </label>
+        <label class="grid gap-2 font-semibold text-slate-700">
+          {{ 'AdminSouvenirs.PhotoCaption' | translate }}
+          <input name="photoCaption" [(ngModel)]="newPhotoCaption" class="w-full rounded-lg border border-slate-400 p-3 text-ink" />
+        </label>
+        <label class="grid gap-2 font-semibold text-slate-700">
+          {{ 'AdminSouvenirs.PhotoDisplayOrder' | translate }}
+          <input name="photoDisplayOrder" type="number" min="1" [(ngModel)]="newPhotoDisplayOrder" class="w-full rounded-lg border border-slate-400 p-3 text-ink" />
+        </label>
+        <button type="button" (click)="addPhoto()" class="min-h-[46px] rounded-lg bg-primary px-4 font-bold text-white">{{ 'AdminSouvenirs.AddPhoto' | translate }}</button>
+      </div>
+    </section>
+  }
+</main>

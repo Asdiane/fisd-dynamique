@@ -1,0 +1,73 @@
+<div class="grid min-h-screen place-items-center bg-surface px-6 py-10">
+  <div class="w-full max-w-[380px]">
+    <a routerLink="/admin" class="text-[0.85rem] font-semibold text-muted transition hover:text-primary">← {{ 'AdminAcceptInvitation.BackToLogin' | translate }}</a>
+
+    <div class="mt-4">
+      <h1 class="m-0 text-[1.5rem] font-bold text-primary-900">{{ 'AdminAcceptInvitation.Title' | translate }}</h1>
+      <p class="mt-1.5 text-[0.92rem] text-muted">{{ 'AdminAcceptInvitation.Subtitle' | translate }}</p>
+    </div>
+
+    <div class="mt-6 rounded-2xl bg-white p-6 shadow-[0_25px_65px_-15px_rgba(0,0,34,0.18)] ring-1 ring-black/5 sm:p-7">
+      @if (loading()) {
+        <p class="m-0 text-[0.86rem] text-muted">{{ 'AdminAcceptInvitation.Loading' | translate }}</p>
+      } @else if (!token() || !invitation()) {
+        <p class="m-0 text-[0.86rem] font-semibold text-[#b42318]">{{ 'AdminAcceptInvitation.InvalidToken' | translate }}</p>
+      } @else {
+        <p class="mb-4 text-[0.88rem] text-ink">{{ 'AdminAcceptInvitation.WelcomeMessage' | translate: { email: invitation()!.email } }}</p>
+
+        @if (errorMessage()) {
+          <div class="mb-4 rounded-lg bg-[#fef3f2] px-3.5 py-2.5 text-[0.82rem] font-semibold text-[#b42318]">{{ errorMessage() }}</div>
+        }
+
+        <form (ngSubmit)="onSubmit()" class="grid gap-3.5">
+          <label class="grid gap-1.5">
+            <span class="text-[0.8rem] font-semibold text-slate-700">{{ 'AdminAcceptInvitation.PasswordLabel' | translate }}</span>
+            <div class="relative">
+              <input
+                name="password"
+                [type]="hidePassword() ? 'password' : 'text'"
+                autocomplete="new-password"
+                required
+                minlength="8"
+                [(ngModel)]="password"
+                class="h-11 w-full rounded-lg border-0 bg-surface px-3.5 pr-11 text-[0.92rem] text-ink outline-none ring-1 ring-line transition focus:bg-white focus:ring-2 focus:ring-primary-300" />
+              <button
+                type="button"
+                (click)="hidePassword.set(!hidePassword())"
+                [attr.aria-label]="hidePassword() ? ('AdminLogin.ShowPassword' | translate) : ('AdminLogin.HidePassword' | translate)"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-primary">
+                @if (hidePassword()) {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-[18px] w-[18px]"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                } @else {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-[18px] w-[18px]"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
+                }
+              </button>
+            </div>
+          </label>
+
+          <label class="grid gap-1.5">
+            <span class="text-[0.8rem] font-semibold text-slate-700">{{ 'AdminAcceptInvitation.ConfirmPasswordLabel' | translate }}</span>
+            <input
+              name="confirmPassword"
+              type="password"
+              autocomplete="new-password"
+              required
+              minlength="8"
+              [(ngModel)]="confirmPassword"
+              class="h-11 w-full rounded-lg border-0 bg-surface px-3.5 text-[0.92rem] text-ink outline-none ring-1 ring-line transition focus:bg-white focus:ring-2 focus:ring-primary-300" />
+          </label>
+
+          <button
+            type="submit"
+            [disabled]="submitting()"
+            class="mt-1.5 flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary text-[0.92rem] font-bold tracking-wide text-white transition hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50">
+            @if (submitting()) {
+              <span class="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
+            }
+            {{ 'AdminAcceptInvitation.Submit' | translate }}
+          </button>
+        </form>
+      }
+    </div>
+  </div>
+</div>

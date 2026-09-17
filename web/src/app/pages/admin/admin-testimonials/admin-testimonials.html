@@ -1,0 +1,40 @@
+<main class="mx-auto my-10 max-w-[1000px] px-[22px] pb-[60px]">
+  <app-admin-page-header
+    [eyebrow]="'AdminTestimonials.Eyebrow' | translate"
+    [title]="'AdminTestimonials.Title' | translate"
+    [subtitle]="'AdminTestimonials.Subtitle' | translate">
+  </app-admin-page-header>
+
+  <app-admin-info-card
+    [title]="'AdminTestimonials.InfoTitle' | translate"
+    [description]="'AdminTestimonials.InfoBody' | translate">
+  </app-admin-info-card>
+
+  <section>
+    <div class="my-6 flex flex-wrap items-center gap-3">
+      <h2 class="m-0 mr-auto text-ink">{{ 'AdminTestimonials.YourTestimonials' | translate }}</h2>
+      <a routerLink="new" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white">{{ 'AdminTestimonials.NewTestimonial' | translate }}</a>
+    </div>
+
+    @if (!loading() && testimonials().length === 0) {
+      <app-nodata [title]="'AdminTestimonials.EmptyState' | translate"></app-nodata>
+    }
+
+    <div class="grid gap-2.5">
+      @for (testimonial of testimonials(); track testimonial.id) {
+        <div class="flex flex-wrap items-start gap-4 rounded-xl border border-line bg-white p-4">
+          <div class="min-w-0 flex-1">
+            <strong class="block break-words text-ink">{{ testimonial.authorName }}</strong>
+            @if (testimonial.authorRoleFr) {
+              <small class="block text-muted">{{ testimonial.authorRoleFr }}</small>
+            }
+            <p class="mt-1 line-clamp-2 text-[0.92rem] text-muted">{{ testimonial.contentFr }}</p>
+            <small class="text-muted">{{ testimonial.isVisible ? ('AdminContacts.Visible' | translate) : ('AdminContacts.Hidden' | translate) }} · {{ testimonial.status === 'published' ? ('Common.StatusPublished' | translate) : ('Common.StatusDraft' | translate) }}</small>
+          </div>
+          <a [routerLink]="[testimonial.id]" class="rounded-lg border border-primary px-3.5 py-2 font-bold text-primary">{{ 'AdminTestimonials.EditButton' | translate }}</a>
+          <button type="button" (click)="deleteTestimonial(testimonial)" class="rounded-lg border border-[#b42318] px-3.5 py-2 font-bold text-[#b42318]">{{ 'AdminTestimonials.DeleteButton' | translate }}</button>
+        </div>
+      }
+    </div>
+  </section>
+</main>

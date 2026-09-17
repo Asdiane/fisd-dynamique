@@ -1,0 +1,42 @@
+<main class="mx-auto my-10 max-w-[1000px] px-[22px] pb-[60px]">
+  <a routerLink="/admin/help" class="mb-4 inline-flex items-center gap-1.5 font-bold text-primary">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M15 6l-6 6 6 6" /></svg>
+    {{ 'AdminHelp.Title' | translate }}
+  </a>
+
+  <app-admin-page-header
+    [eyebrow]="'AdminHelpArticles.Eyebrow' | translate"
+    [title]="'AdminHelpArticles.Title' | translate"
+    [subtitle]="'AdminHelpArticles.Subtitle' | translate">
+  </app-admin-page-header>
+
+  <app-admin-info-card
+    [title]="'AdminHelpArticles.InfoTitle' | translate"
+    [description]="'AdminHelpArticles.InfoBody' | translate">
+  </app-admin-info-card>
+
+  <section>
+    <div class="my-6 flex flex-wrap items-center gap-3">
+      <h2 class="m-0 mr-auto text-ink">{{ 'AdminHelpArticles.YourArticles' | translate }}</h2>
+      <a routerLink="new" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white">{{ 'AdminHelpArticles.NewArticle' | translate }}</a>
+    </div>
+
+    @if (!loading() && articles().length === 0) {
+      <app-nodata [title]="'AdminHelpArticles.EmptyState' | translate"></app-nodata>
+    }
+
+    <div class="grid gap-2.5">
+      @for (article of articles(); track article.id) {
+        <div class="flex flex-wrap items-center gap-4 rounded-xl border border-line bg-white p-4">
+          <div class="min-w-0 flex-1">
+            <small class="block font-bold uppercase tracking-wide text-primary">{{ article.category }}</small>
+            <strong class="block break-words text-ink">{{ article.titleFr }}</strong>
+            <small class="text-muted">{{ article.isVisible ? ('AdminContacts.Visible' | translate) : ('AdminContacts.Hidden' | translate) }}</small>
+          </div>
+          <a [routerLink]="[article.id]" class="rounded-lg border border-primary px-3.5 py-2 font-bold text-primary">{{ 'AdminParticipants.EditButton' | translate }}</a>
+          <button type="button" (click)="deleteArticle(article)" class="rounded-lg border border-[#b42318] px-3.5 py-2 font-bold text-[#b42318]">{{ 'AdminParticipants.DeleteButton' | translate }}</button>
+        </div>
+      }
+    </div>
+  </section>
+</main>

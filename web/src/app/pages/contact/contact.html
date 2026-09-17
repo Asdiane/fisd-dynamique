@@ -1,0 +1,47 @@
+<app-page-hero
+  [eyebrow]="'Contact.HeroEyebrow' | translate"
+  [title]="'Contact.HeroTitle' | translate"
+  [description]="'Contact.HeroDescription' | translate"
+  image="assets/images/visibilite-reseautage.jpeg">
+</app-page-hero>
+
+<section class="py-[clamp(44px,6vw,76px)]">
+  <div class="mx-auto grid w-[min(1180px,calc(100%-36px))] grid-cols-1 items-start gap-8 lg:grid-cols-2">
+    <div [appScrollReveal]="0" class="rounded-[28px] border border-line bg-white p-7 shadow-[0_12px_34px_rgba(15,23,42,0.06)]">
+      <h3 class="m-0 text-[1.4rem] text-ink">{{ 'Contact.FormTitle' | translate }}</h3>
+      <form class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2" action="mailto:info@fisd.ca" method="post" enctype="text/plain">
+        <div class="grid gap-2">
+          <label class="text-[0.92rem] font-extrabold text-slate-700">{{ 'Contact.FieldName' | translate }}</label>
+          <input type="text" name="name" [placeholder]="'Contact.FieldName' | translate" class="w-full rounded-2xl border border-line bg-slate-50 px-3.5 py-3.5 text-ink outline-none focus:border-primary focus:bg-white" />
+        </div>
+        <div class="grid gap-2">
+          <label class="text-[0.92rem] font-extrabold text-slate-700">{{ 'Contact.FieldEmail' | translate }}</label>
+          <input type="text" name="email" [placeholder]="'Contact.FieldEmail' | translate" class="w-full rounded-2xl border border-line bg-slate-50 px-3.5 py-3.5 text-ink outline-none focus:border-primary focus:bg-white" />
+        </div>
+        <div class="col-span-full grid gap-2">
+          <label class="text-[0.92rem] font-extrabold text-slate-700">{{ 'Contact.FieldMessage' | translate }}</label>
+          <textarea name="message" rows="5" [placeholder]="'Contact.FieldMessage' | translate" class="w-full rounded-2xl border border-line bg-slate-50 px-3.5 py-3.5 text-ink outline-none focus:border-primary focus:bg-white"></textarea>
+        </div>
+        <button type="submit" class="col-span-full min-h-[46px] justify-self-start rounded-[14px] bg-[linear-gradient(90deg,#0000cc,#0000FF,#3785ff)] px-[18px] py-3 font-extrabold text-white shadow-[0_14px_40px_rgba(0,0,255,0.24)]">
+          {{ 'Contact.Submit' | translate }}
+        </button>
+      </form>
+    </div>
+
+    <div class="grid gap-[18px]">
+      @for (group of groups(); track group.value; let i = $index) {
+        <article [appScrollReveal]="100 + i * 90" class="grid gap-3.5 rounded-[28px] border border-line bg-white p-[26px] shadow-[0_12px_34px_rgba(15,23,42,0.06)]">
+          <h3 class="m-0 text-[1.2rem] text-ink">{{ group.title }}</h3>
+          <p class="m-0 text-[1.15rem] font-black text-ink">{{ group.value }}</p>
+          <div class="flex flex-wrap gap-2.5">
+            @for (link of group.links; track link.href) {
+              <a [href]="link.href" [target]="link.external ? '_blank' : null" [rel]="link.external ? 'noopener noreferrer' : null" class="min-h-[46px] rounded-[14px] bg-white px-[18px] py-3 font-extrabold text-primary shadow-card">
+                {{ link.cta }}
+              </a>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>

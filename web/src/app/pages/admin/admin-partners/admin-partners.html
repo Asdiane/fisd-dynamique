@@ -1,0 +1,37 @@
+<main class="mx-auto my-10 max-w-[1000px] px-[22px] pb-[60px]">
+  <app-admin-page-header
+    [eyebrow]="'AdminPartners.Eyebrow' | translate"
+    [title]="'AdminPartners.Title' | translate"
+    [subtitle]="'AdminPartners.Subtitle' | translate">
+  </app-admin-page-header>
+
+  <app-admin-info-card
+    [title]="'AdminPartners.InfoTitle' | translate"
+    [description]="'AdminPartners.InfoBody' | translate">
+  </app-admin-info-card>
+
+  <section>
+    <div class="my-6 flex flex-wrap items-center gap-3">
+      <h2 class="m-0 mr-auto text-ink">{{ 'AdminPartners.YourPartners' | translate }}</h2>
+      <a routerLink="new" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white">{{ 'AdminPartners.NewPartner' | translate }}</a>
+    </div>
+
+    @if (!loading() && partners().length === 0) {
+      <app-nodata [title]="'AdminPartners.EmptyState' | translate"></app-nodata>
+    }
+
+    <div class="grid gap-2.5">
+      @for (partner of partners(); track partner.id) {
+        <div class="flex flex-wrap items-start gap-4 rounded-xl border border-line bg-white p-4">
+          <img [src]="partner.logoUrl" [alt]="partner.name" class="h-16 w-16 shrink-0 rounded-lg object-contain" />
+          <div class="min-w-0 flex-1">
+            <strong class="block break-words text-ink">{{ partner.label || partner.name }}</strong>
+            <small class="text-muted">{{ partner.isVisible ? ('AdminContacts.Visible' | translate) : ('AdminContacts.Hidden' | translate) }} · {{ partner.status === 'published' ? ('Common.StatusPublished' | translate) : ('Common.StatusDraft' | translate) }}</small>
+          </div>
+          <a [routerLink]="[partner.id]" class="rounded-lg border border-primary px-3.5 py-2 font-bold text-primary">{{ 'AdminParticipants.EditButton' | translate }}</a>
+          <button type="button" (click)="deletePartner(partner)" class="rounded-lg border border-[#b42318] px-3.5 py-2 font-bold text-[#b42318]">{{ 'AdminParticipants.DeleteButton' | translate }}</button>
+        </div>
+      }
+    </div>
+  </section>
+</main>

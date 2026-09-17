@@ -1,0 +1,10 @@
+<button type="button" #trigger (click)="toggle($event)" class="admin-help-tip-btn" [class.active]="open">
+  <svg viewBox="0 0 20 20" fill="currentColor" class="h-[15px] w-[15px]">
+    <path fill-rule="evenodd" d="M18 10A8 8 0 112 10a8 8 0 0116 0zM8.94 6.94a1.5 1.5 0 112.12 2.12c-.4.4-.56.65-.56 1.44v.25a.75.75 0 01-1.5 0v-.25c0-1.2.42-1.77.94-2.29a.75.75 0 000-1.06.75.75 0 10-1.28.53.75.75 0 01-1.28-.53c0-.62.25-1.18.66-1.59zM10 14.5a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+  </svg>
+</button>
+@if (open) {
+  <div #popover class="admin-help-tip-popover" popover="manual" [style.top.px]="popoverTop" [style.left.px]="popoverLeft" [attr.data-placement]="resolvedPosition" (click)="$event.stopPropagation()">
+    <p>{{ text() }}</p>
+  </div>
+}

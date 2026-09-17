@@ -1,0 +1,69 @@
+<main class="mx-auto my-10 max-w-[1200px] px-[22px] pb-[60px]">
+  <app-admin-page-header
+    [eyebrow]="'AdminEmailHistory.Eyebrow' | translate"
+    [title]="'AdminEmailHistory.Title' | translate"
+    [subtitle]="'AdminEmailHistory.Subtitle' | translate">
+  </app-admin-page-header>
+
+  <div class="my-6 flex flex-wrap items-center gap-3">
+    <app-select
+      [(ngModel)]="status"
+      (ngModelChange)="onStatusChange()"
+      [options]="statusOptions"
+      triggerClass="min-w-[180px] rounded-lg border border-slate-400 bg-white p-2.5 font-bold text-ink">
+    </app-select>
+    <span class="text-muted">{{ 'AdminEmailHistory.TotalCount' | translate: { count: totalCount() } }}</span>
+  </div>
+
+  @if (!loading() && entries().length === 0) {
+    <app-nodata [title]="'AdminEmailHistory.EmptyState' | translate"></app-nodata>
+  }
+
+  <div class="grid gap-2.5">
+    @for (entry of entries(); track entry.id) {
+      <div class="rounded-xl border border-line bg-white">
+        <button
+          type="button"
+          (click)="toggleDetail(entry)"
+          class="flex w-full flex-wrap items-center gap-3 p-4 text-left">
+          <span class="rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold uppercase tracking-wide" [class]="statusBadgeClass(entry.emailSent)">
+            {{ entry.emailSent ? ('AdminEmailHistory.StatusSent' | translate) : ('AdminEmailHistory.StatusFailed' | translate) }}
+          </span>
+          <div class="min-w-0 flex-1">
+            <strong class="block break-words text-ink">{{ entry.subject }}</strong>
+            <small class="text-muted">{{ entry.createdAt | date: 'medium' }} &middot; {{ 'AdminEmailHistory.To' | translate }} {{ entry.sentTo }}</small>
+          </div>
+          <span class="text-muted">{{ expandedId() === entry.id ? '▲' : '▼' }}</span>
+        </button>
+
+        @if (expandedId() === entry.id) {
+          <div class="border-t border-line bg-surface p-4">
+            @if (loadingDetail()) {
+              <p class="text-muted">{{ 'AdminEmailHistory.LoadingDetail' | translate }}</p>
+            } @else {
+              @if (!entry.emailSent && entry.errorMessage) {
+                <p class="mb-3 rounded-lg bg-[#fef3f2] px-3 py-2 text-[0.85rem] font-semibold text-[#b42318]">{{ entry.errorMessage }}</p>
+              }
+              <small class="mb-2 block text-muted">{{ 'AdminEmailHistory.From' | translate }} {{ entry.sentFrom }}</small>
+              @if (expandedDetail()?.body) {
+                <iframe class="h-[320px] w-full rounded-lg border border-line bg-white" [srcdoc]="expandedDetail()?.body"></iframe>
+              }
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  @if (totalPages > 1) {
+    <div class="my-6 flex items-center justify-center gap-3">
+      <button type="button" (click)="goToPage(page() - 1)" [disabled]="page() <= 1" class="rounded-lg border border-slate-400 px-3.5 py-2 font-bold text-ink disabled:cursor-not-allowed disabled:opacity-50">
+        {{ 'AdminErrorLogs.Previous' | translate }}
+      </button>
+      <span class="text-muted">{{ 'AdminErrorLogs.PageIndicator' | translate: { page: page(), totalPages } }}</span>
+      <button type="button" (click)="goToPage(page() + 1)" [disabled]="page() >= totalPages" class="rounded-lg border border-slate-400 px-3.5 py-2 font-bold text-ink disabled:cursor-not-allowed disabled:opacity-50">
+        {{ 'AdminErrorLogs.Next' | translate }}
+      </button>
+    </div>
+  }
+</main>

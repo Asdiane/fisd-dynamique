@@ -1,0 +1,30 @@
+@if (loaded()) {
+  @if (article(); as item) {
+    <section class="bg-white py-[clamp(44px,6vw,76px)]">
+      <div class="mx-auto w-[min(900px,calc(100%-36px))]">
+        <a routerLink="/actualites" class="text-[0.92rem] font-bold text-primary">{{ 'NewsDetail.Back' | translate }}</a>
+
+        @if (item.imageUrl) {
+          <div class="mt-6 overflow-hidden rounded-[28px] border border-line bg-[#0b1028]">
+            <img [src]="item.imageUrl" [alt]="item.title" class="max-h-[420px] w-full object-cover" />
+          </div>
+        }
+
+        <div class="mt-3 flex flex-wrap items-center gap-2.5 text-[0.86rem] font-extrabold text-muted">
+          <span class="rounded-full bg-primary px-2.5 py-1.5 text-[0.72rem] font-black uppercase tracking-[0.1em] text-white">{{ 'News.Published' | translate }}</span>
+          <span>{{ formatDate(item.publishedAt ?? item.createdAt) }}</span>
+        </div>
+        <h1 class="mt-4 text-[clamp(2rem,4vw,3.4rem)] leading-[1.05] text-ink">{{ item.title }}</h1>
+        <p class="mt-4 text-[1.1rem] leading-[1.8] text-muted">{{ item.excerpt }}</p>
+        <div class="mt-6 whitespace-pre-wrap break-words leading-[1.8] text-ink">{{ item.content }}</div>
+      </div>
+    </section>
+  } @else {
+    <section class="bg-white py-[clamp(44px,6vw,76px)]">
+      <div class="mx-auto w-[min(900px,calc(100%-36px))] text-center">
+        <h1 class="text-[clamp(1.7rem,4vw,3rem)] text-ink">{{ 'NewsDetail.NotFoundTitle' | translate }}</h1>
+        <a routerLink="/actualites" class="mt-4 inline-block text-[0.92rem] font-bold text-primary">{{ 'NewsDetail.Back' | translate }}</a>
+      </div>
+    </section>
+  }
+}

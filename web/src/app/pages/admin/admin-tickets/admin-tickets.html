@@ -1,0 +1,83 @@
+<main class="mx-auto my-10 max-w-[900px] px-[22px] pb-[60px]">
+  <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <app-admin-page-header
+      [eyebrow]="'AdminTickets.Eyebrow' | translate"
+      [title]="'AdminTickets.Title' | translate"
+      [subtitle]="'AdminTickets.Subtitle' | translate">
+    </app-admin-page-header>
+    @if (isPlatformAdmin) {
+      <a routerLink="/admin/tickets/manage" class="rounded-lg border border-primary px-4 py-2.5 font-bold text-primary">{{ 'AdminTickets.ManageButton' | translate }}</a>
+    }
+  </div>
+
+  <form (ngSubmit)="submit()" class="grid gap-6 rounded-[22px] border border-line bg-white p-8 sm:p-10">
+    <h2 class="m-0 text-ink">{{ 'AdminTickets.FormTitle' | translate }}</h2>
+
+    <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+      {{ 'AdminTickets.FieldCategory' | translate }}
+      <select name="category" [(ngModel)]="category" class="w-full max-w-[280px] rounded-lg border border-slate-400 p-3.5 text-[0.98rem] text-ink">
+        <option value="bug">{{ 'AdminTickets.CategoryBug' | translate }}</option>
+        <option value="improvement">{{ 'AdminTickets.CategoryImprovement' | translate }}</option>
+        <option value="other">{{ 'AdminTickets.CategoryOther' | translate }}</option>
+      </select>
+    </label>
+
+    <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+      {{ 'AdminTickets.FieldTitle' | translate }}
+      <input name="title" maxlength="200" required [(ngModel)]="title" class="w-full rounded-lg border border-slate-400 p-3.5 text-[0.98rem] text-ink" />
+    </label>
+
+    <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+      {{ 'AdminTickets.FieldDescription' | translate }}
+      <textarea name="description" rows="5" required [(ngModel)]="description" class="w-full resize-y rounded-lg border border-slate-400 p-3.5 text-[0.98rem] leading-[1.6] text-ink"></textarea>
+    </label>
+
+    <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+      {{ 'AdminTickets.FieldAttachment' | translate }}
+      <input #fileInput type="file" accept="image/jpeg,image/png,image/webp,application/pdf,text/plain" (change)="onFileSelected($event)" class="w-full text-[0.9rem] text-ink file:mr-3 file:rounded-lg file:border-0 file:bg-surface file:px-3.5 file:py-2 file:font-bold file:text-ink" />
+      @if (selectedFile) {
+        <span class="flex items-center gap-2 text-[0.85rem] text-muted">
+          {{ selectedFile.name }} ({{ formatFileSize(selectedFile.size) }})
+          <button type="button" (click)="clearSelectedFile(); fileInput.value = ''" class="font-bold text-primary">{{ 'Common.Cancel' | translate }}</button>
+        </span>
+      }
+    </label>
+
+    <div>
+      <button type="submit" [disabled]="busy()" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white disabled:cursor-wait disabled:opacity-50">{{ 'AdminTickets.SubmitButton' | translate }}</button>
+    </div>
+  </form>
+
+  <section class="mt-10">
+    <h2 class="mb-3 text-ink">{{ 'AdminTickets.YourTickets' | translate }}</h2>
+
+    @if (!loading() && tickets().length === 0) {
+      <app-nodata [title]="'AdminTickets.EmptyState' | translate"></app-nodata>
+    }
+
+    <div class="grid gap-2.5">
+      @for (ticket of tickets(); track ticket.id) {
+        <div class="rounded-xl border border-line bg-white p-4">
+          <div class="flex flex-wrap items-center gap-3">
+            <strong class="min-w-0 flex-1 break-words text-ink">{{ ticket.title }}</strong>
+            <span class="rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold uppercase tracking-wide" [class]="statusBadgeClass(ticket.status)">{{ statusLabel(ticket.status) }}</span>
+          </div>
+          <p class="mt-2 whitespace-pre-wrap break-words text-[0.92rem] leading-relaxed text-muted">{{ ticket.description }}</p>
+          @if (ticket.resolutionNote) {
+            <p class="mt-2 rounded-lg bg-surface p-3 text-[0.88rem] leading-relaxed text-ink">{{ ticket.resolutionNote }}</p>
+          }
+          @if (ticket.attachments.length > 0) {
+            <div class="mt-2 flex flex-wrap gap-2">
+              @for (attachment of ticket.attachments; track attachment.id) {
+                <a [href]="attachment.url" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 rounded-lg border border-line px-2.5 py-1.5 text-[0.82rem] font-semibold text-primary">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5 shrink-0"><path d="M21.44 11.05l-9.19 9.19a5 5 0 01-7.07-7.07l9.19-9.19a3 3 0 014.24 4.24l-9.2 9.19a1 1 0 01-1.41-1.41l8.49-8.48" /></svg>
+                  {{ attachment.originalFileName }}
+                </a>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </section>
+</main>

@@ -1,0 +1,31 @@
+<div class="pointer-events-none fixed inset-x-0 bottom-6 z-[110] flex flex-col items-center gap-2.5 px-4">
+  @for (msg of snackbar.messages(); track msg.id) {
+    <div
+      class="pointer-events-auto flex w-full max-w-[440px] items-center gap-3 rounded-xl px-4 py-3.5 text-white shadow-card"
+      [class]="colorClass(msg.type)">
+      @if (msg.type === 'success') {
+        <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 shrink-0">
+          <path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0l-3.5-3.5a1 1 0 111.4-1.4l2.8 2.8 6.8-6.8a1 1 0 011.4 0z" clip-rule="evenodd" />
+        </svg>
+      } @else if (msg.type === 'error') {
+        <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 shrink-0">
+          <path fill-rule="evenodd" d="M18 10A8 8 0 112 10a8 8 0 0116 0zm-7-4a1 1 0 10-2 0v4a1 1 0 102 0V6zm-1 8a1.25 1.25 0 100-2.5A1.25 1.25 0 0010 14z" clip-rule="evenodd" />
+        </svg>
+      } @else if (msg.type === 'warning') {
+        <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 shrink-0">
+          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.72-1.36 3.486 0l6.63 11.797c.75 1.334-.213 2.98-1.743 2.98H3.37c-1.53 0-2.493-1.646-1.743-2.98L8.257 3.1zM11 14a1 1 0 11-2 0 1 1 0 012 0zm-.25-6.5a.75.75 0 00-1.5 0v3.5a.75.75 0 001.5 0v-3.5z" clip-rule="evenodd" />
+        </svg>
+      } @else {
+        <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 shrink-0">
+          <path fill-rule="evenodd" d="M18 10A8 8 0 112 10a8 8 0 0116 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9zm1-4a1.25 1.25 0 100 2.5A1.25 1.25 0 0010 5z" clip-rule="evenodd" />
+        </svg>
+      }
+      <span class="min-w-0 flex-1 text-[0.92rem] font-semibold leading-snug">{{ msg.text }}</span>
+      <button type="button" (click)="snackbar.dismiss(msg.id)" class="shrink-0 opacity-80 hover:opacity-100">
+        <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4">
+          <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+        </svg>
+      </button>
+    </div>
+  }
+</div>

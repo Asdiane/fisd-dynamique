@@ -1,0 +1,69 @@
+<app-page-hero
+  [eyebrow]="'Reservation.HeroEyebrow' | translate"
+  [title]="'Reservation.HeroTitle' | translate"
+  [description]="'Reservation.HeroDescription' | translate"
+  image="assets/images/slider-panel-podium.jpeg">
+</app-page-hero>
+
+<section class="py-[clamp(44px,6vw,76px)]">
+  <div class="mx-auto grid w-[min(1180px,calc(100%-36px))] grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(280px,0.85fr)]">
+    <div [appScrollReveal]="0" class="rounded-[30px] border border-[rgba(0,0,255,0.18)] bg-[linear-gradient(135deg,rgba(239,246,255,0.96),rgba(255,255,255,1))] p-[clamp(28px,5vw,48px)] shadow-card">
+      <p class="m-0 text-[0.82rem] font-black uppercase tracking-[0.18em] text-primary">{{ 'Reservation.TicketingEyebrow' | translate }}</p>
+      <h2 class="m-0 text-[clamp(2.2rem,5vw,4.8rem)] leading-none text-ink">{{ 'Reservation.TicketingTitle' | translate }}</h2>
+
+      <div class="my-6 grid gap-1.5 rounded-[22px] border border-[rgba(0,0,255,0.16)] bg-white p-[18px]">
+        <span class="text-[0.78rem] font-black uppercase tracking-[0.16em] text-primary">{{ 'Reservation.NextEdition' | translate }}</span>
+        <strong class="text-[1.2rem] leading-[1.25] text-ink">{{ nextEditionName() || ('Reservation.NextEditionName' | translate) }}</strong>
+        <small class="font-bold leading-[1.4] text-muted">{{ nextEditionPlace() || ('Reservation.NextEditionPlace' | translate) }}</small>
+        <a [href]="zeffyUrl()" target="_blank" rel="noopener noreferrer" class="justify-self-start font-black text-primary underline">{{ 'Reservation.ZeffyLink' | translate }}</a>
+      </div>
+
+      <p class="text-[1.08rem] leading-[1.8] text-muted">{{ 'Reservation.LimitedSeats' | translate }}</p>
+
+      <p class="mt-6 border-t border-line pt-[22px] text-[1.08rem] leading-[1.8] text-muted">
+        {{ 'Reservation.TermsNoticePrefix' | translate }}
+        <a routerLink="/conditions" class="font-black text-primary underline">{{ 'Reservation.TermsLinkLabel' | translate }}</a>.
+      </p>
+
+      <label class="mt-5 flex items-start gap-3 font-extrabold text-slate-700">
+        <input type="checkbox" class="mt-0.5 h-5 w-5 accent-primary" />
+        <span>{{ 'Reservation.TermsCheckboxLabel' | translate }}</span>
+      </label>
+
+      <a
+        [href]="zeffyUrl()"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mt-6 inline-block min-h-[46px] rounded-[14px] bg-[linear-gradient(90deg,#0000cc,#0000FF,#3785ff)] px-[18px] py-3 font-extrabold text-white shadow-[0_14px_40px_rgba(0,0,255,0.24)]">
+        {{ 'Reservation.ReserveCta' | translate }}
+      </a>
+    </div>
+
+    <aside [appScrollReveal]="120" class="rounded-[28px] border border-line bg-white p-7 shadow-[0_12px_34px_rgba(15,23,42,0.06)]">
+      <h3 class="m-0 text-[1.4rem] text-ink">{{ 'Reservation.ParticipationTitle' | translate }}</h3>
+      <p class="mt-2 text-muted">{{ 'Reservation.ParticipationText' | translate }}</p>
+      <div class="mt-5 grid gap-3.5">
+        <article class="rounded-[18px] border border-line bg-slate-50 p-4">
+          <h4 class="m-0 text-ink">{{ 'Reservation.ParticipantTitle' | translate }}</h4>
+          <p class="mt-1 text-muted">{{ 'Reservation.ParticipantText' | translate }}</p>
+          <a [href]="zeffyUrl()" target="_blank" rel="noopener noreferrer" class="mt-2 inline-block font-extrabold text-primary">{{ 'Reservation.ParticipantCta' | translate }}</a>
+        </article>
+        @for (action of actions(); track action.title) {
+          <article class="grid grid-cols-[68px_1fr] items-center gap-3.5 overflow-hidden rounded-[18px] border border-line bg-slate-50 p-4">
+            <img [src]="action.image" [alt]="action.title" class="h-[52px] w-[68px] rounded-[12px] object-cover" />
+            <div>
+              <h4 class="m-0 text-ink">{{ action.title }}</h4>
+              <p class="mt-1 text-muted">{{ action.detail }}</p>
+              <a [href]="action.link" target="_blank" rel="noopener noreferrer" class="mt-2 inline-block font-extrabold text-primary">{{ action.cta }}</a>
+            </div>
+          </article>
+        }
+        <article class="rounded-[18px] border border-line bg-slate-50 p-4">
+          <h4 class="m-0 text-ink">{{ 'Reservation.GuestTitle' | translate }}</h4>
+          <p class="mt-1 text-muted">{{ 'Reservation.GuestText' | translate }}</p>
+          <a href="mailto:info@fisd.ca" class="mt-2 inline-block font-extrabold text-primary">{{ 'Reservation.GuestCta' | translate }}</a>
+        </article>
+      </div>
+    </aside>
+  </div>
+</section>

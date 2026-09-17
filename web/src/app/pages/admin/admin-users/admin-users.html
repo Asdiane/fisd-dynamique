@@ -1,0 +1,85 @@
+<main class="mx-auto my-10 max-w-[1000px] px-[22px] pb-[60px]">
+  <app-admin-page-header
+    [eyebrow]="'AdminUsers.Eyebrow' | translate"
+    [title]="'AdminUsers.Title' | translate"
+    [subtitle]="'AdminUsers.Subtitle' | translate">
+  </app-admin-page-header>
+
+  <app-admin-info-card
+    [title]="'AdminUsers.InfoTitle' | translate"
+    [description]="'AdminUsers.InfoBody' | translate">
+  </app-admin-info-card>
+
+  <section>
+    <div class="my-6 flex flex-wrap items-center gap-3">
+      <h2 class="m-0 mr-auto text-ink">{{ 'AdminUsers.YourUsers' | translate }}</h2>
+      <a routerLink="new" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white">{{ 'AdminUsers.NewUser' | translate }}</a>
+    </div>
+
+    @if (!loading() && users().length === 0) {
+      <app-nodata [title]="'AdminUsers.EmptyState' | translate"></app-nodata>
+    }
+
+    <div class="grid gap-2.5">
+      @for (user of users(); track user.id) {
+        <div class="flex flex-wrap items-center gap-4 rounded-xl border border-line bg-white p-4">
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-wrap items-center gap-2">
+              <strong class="break-words text-ink">{{ user.email }}</strong>
+              @if (!user.isActive) {
+                <span class="rounded-full bg-[#fef3f2] px-2.5 py-0.5 text-[0.72rem] font-bold uppercase tracking-wide text-[#b42318]">{{ 'AdminUsers.StatusInactive' | translate }}</span>
+              }
+              @if (user.twoFactorEnabled) {
+                <span class="rounded-full bg-[#ecfdf3] px-2.5 py-0.5 text-[0.72rem] font-bold uppercase tracking-wide text-[#087443]">{{ 'AdminUsers.TwoFactorOn' | translate }}</span>
+              }
+            </div>
+            <small class="text-muted">{{ roleLabel(user.role) }}</small>
+          </div>
+
+          @if (user.email === currentUserEmail) {
+            <span class="rounded-full border border-line px-3.5 py-2 text-[0.85rem] font-bold text-muted">{{ 'AdminUsers.You' | translate }}</span>
+          } @else if (canActOn(user)) {
+            <div class="flex flex-wrap items-center gap-2">
+              <app-select
+                [ngModel]="user.role"
+                (ngModelChange)="changeRole(user, $event)"
+                [options]="roleOptions"
+                triggerClass="min-w-[170px] rounded-lg border border-slate-400 bg-white p-2.5 font-bold text-ink">
+              </app-select>
+
+              @if (isPlatformAdmin) {
+                <button type="button" (click)="toggleActive(user)" class="rounded-lg border border-slate-400 px-3.5 py-2 font-bold text-ink">
+                  {{ (user.isActive ? 'AdminUsers.DeactivateButton' : 'AdminUsers.ActivateButton') | translate }}
+                </button>
+
+                @if (user.twoFactorEnabled) {
+                  <button type="button" (click)="resetTwoFactor(user)" class="rounded-lg border border-slate-400 px-3.5 py-2 font-bold text-ink">{{ 'AdminUsers.ResetTwoFactorButton' | translate }}</button>
+                }
+              }
+
+              <button type="button" (click)="deleteUser(user)" class="rounded-lg border border-[#b42318] px-3.5 py-2 font-bold text-[#b42318]">{{ 'AdminUsers.DeleteButton' | translate }}</button>
+            </div>
+          } @else {
+            <span class="rounded-full border border-line px-3.5 py-2 text-[0.85rem] font-bold text-muted">{{ 'AdminUsers.PlatformAdminOnly' | translate }}</span>
+          }
+        </div>
+      }
+    </div>
+
+    @if (pendingInvitations().length > 0) {
+      <h2 class="mb-3 mt-8 text-ink">{{ 'AdminUsers.PendingInvitations' | translate }}</h2>
+      <div class="grid gap-2.5">
+        @for (invitation of pendingInvitations(); track invitation.id) {
+          <div class="flex flex-wrap items-center gap-4 rounded-xl border border-dashed border-line bg-white p-4">
+            <div class="min-w-0 flex-1">
+              <strong class="block break-words text-ink">{{ invitation.email }}</strong>
+              <small class="text-muted">{{ roleLabel(invitation.role) }} &middot; {{ 'AdminUsers.InviteExpiresOn' | translate: { date: (invitation.expiresAt | date: 'mediumDate') } }}</small>
+            </div>
+            <span class="rounded-full bg-primary-100 px-3 py-1.5 text-[0.8rem] font-bold text-primary-700">{{ 'AdminUsers.StatusPending' | translate }}</span>
+            <button type="button" (click)="cancelInvitation(invitation)" class="rounded-lg border border-[#b42318] px-3.5 py-2 font-bold text-[#b42318]">{{ 'AdminUsers.CancelInviteButton' | translate }}</button>
+          </div>
+        }
+      </div>
+    }
+  </section>
+</main>

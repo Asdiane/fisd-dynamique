@@ -1,0 +1,36 @@
+<main class="mx-auto my-10 max-w-[1000px] px-[22px] pb-[60px]">
+  <app-admin-page-header
+    [eyebrow]="'AdminArticles.Eyebrow' | translate"
+    [title]="'AdminArticles.Title' | translate"
+    [subtitle]="'AdminArticles.Subtitle' | translate">
+  </app-admin-page-header>
+
+  <app-admin-info-card
+    [title]="'AdminArticles.InfoTitle' | translate"
+    [description]="'AdminArticles.InfoBody' | translate">
+  </app-admin-info-card>
+
+  <section>
+    <div class="my-6 flex flex-wrap items-center gap-3">
+      <h2 class="m-0 mr-auto text-ink">{{ 'AdminArticles.YourArticles' | translate }}</h2>
+      <a routerLink="new" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white">{{ 'AdminArticles.NewArticle' | translate }}</a>
+    </div>
+
+    @if (!loading() && articles().length === 0) {
+      <app-nodata [title]="'AdminArticles.EmptyState' | translate"></app-nodata>
+    }
+
+    <div class="grid gap-2.5">
+      @for (article of articles(); track article.id) {
+        <div class="flex items-center gap-4 rounded-xl border border-line bg-white p-4">
+          <div class="min-w-0 flex-1">
+            <strong class="block break-words text-ink">{{ article.title }}</strong>
+            <small class="text-muted">{{ statusLabel(article.status) }}</small>
+          </div>
+          <a [routerLink]="[article.id]" class="rounded-lg border border-primary px-3.5 py-2 font-bold text-primary">{{ 'AdminArticles.EditButton' | translate }}</a>
+          <button type="button" (click)="deleteArticle(article)" class="rounded-lg border border-[#b42318] px-3.5 py-2 font-bold text-[#b42318]">{{ 'AdminParticipants.DeleteButton' | translate }}</button>
+        </div>
+      }
+    </div>
+  </section>
+</main>

@@ -1,0 +1,149 @@
+<header
+  class="sticky top-0 z-50 flex items-center justify-between gap-[18px] border-b border-slate-300/35 bg-white/95 px-4 py-3 shadow-[0_8px_30px_rgba(15,23,42,0.06)] backdrop-blur-md sm:px-[clamp(18px,4vw,42px)] sm:py-3.5"
+>
+  <a
+    routerLink="/"
+    (click)="closeMenu()"
+    class="flex items-center gap-3.5 border-0 bg-transparent text-inherit"
+  >
+    <img
+      src="assets/logos/logo-fisd.png"
+      alt="Logo FISD"
+      class="h-auto max-h-[50px] w-[145px] object-contain sm:max-h-[72px] sm:w-[clamp(120px,16vw,190px)]"
+    />
+  </a>
+
+  <button
+    type="button"
+    (click)="toggleMenu()"
+    class="block h-11 w-11 shrink-0 rounded-[14px] border border-line bg-white lg:hidden"
+    [attr.aria-label]="'Nav.OpenMenu' | translate"
+  >
+    <span class="mx-auto my-[5px] block h-0.5 w-5 bg-ink"></span>
+    <span class="mx-auto my-[5px] block h-0.5 w-5 bg-ink"></span>
+    <span class="mx-auto my-[5px] block h-0.5 w-5 bg-ink"></span>
+  </button>
+
+  <nav
+    [class]="
+      'fixed left-4 right-4 top-[76px] z-40 grid gap-1 rounded-[24px] border border-line bg-white p-3 shadow-card transition-all duration-150 lg:static lg:left-auto lg:right-auto lg:top-auto lg:z-auto lg:flex lg:items-center lg:gap-0.5 lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none navlg:gap-[6px] ' +
+      (menuOpen()
+        ? 'pointer-events-auto translate-y-0 opacity-100'
+        : 'pointer-events-none -translate-y-3.5 opacity-0 lg:pointer-events-auto lg:translate-y-0 lg:opacity-100')
+    "
+  >
+    @for (entry of navEntries(); track entry.labelKey) {
+      @if (isGroup(entry)) {
+        <div
+          class="lg:relative"
+          (mouseenter)="onGroupMouseEnter(entry.id)"
+          (mouseleave)="onGroupMouseLeave()"
+        >
+          <button
+            type="button"
+            (click)="toggleGroup(entry.id)"
+            class="flex w-full items-center justify-between gap-2 whitespace-nowrap rounded-[14px] p-3 text-left text-[0.92rem] font-bold text-slate-700 transition-colors hover:bg-[#eff6ff] hover:text-primary lg:w-auto lg:justify-start lg:p-1.5 lg:text-[0.82rem] lg:hover:bg-transparent navlg:p-2 navlg:text-[0.92rem]"
+          >
+            {{ entry.labelKey | translate }}
+            <svg
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              [class]="
+                'h-4 w-4 shrink-0 transition-transform duration-150 ' +
+                (openGroupId() === entry.id ? 'rotate-180' : '')
+              "
+            >
+              <path
+                fill-rule="evenodd"
+                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+
+          @if (openGroupId() === entry.id) {
+            <div
+              class="grid gap-1 pl-4 pt-1 lg:absolute lg:left-0 lg:top-full lg:min-w-[230px] lg:gap-0.5 lg:rounded-2xl lg:border lg:border-line lg:bg-white lg:p-2 lg:pl-2 lg:pt-2 lg:shadow-card"
+            >
+              @for (
+                child of entry.children;
+                track child.labelKey +
+                  (child.label || '') +
+                  (child.link || '') +
+                  (child.fragment || '')
+              ) {
+                @if (child.externalHref) {
+                  <a
+                    [href]="child.externalHref === 'zeffy' ? zeffyUrl() : child.externalHref"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    (click)="closeMenu()"
+                    class="block rounded-xl p-2.5 text-[0.9rem] font-bold text-slate-600 transition-colors hover:bg-[#eff6ff] hover:text-primary"
+                  >
+                    {{ child.label || (child.labelKey | translate) }}
+                  </a>
+                } @else {
+                  <a
+                    [routerLink]="child.link"
+                    [fragment]="child.fragment"
+                    (click)="closeMenu()"
+                    class="block rounded-xl p-2.5 text-[0.9rem] font-bold text-slate-600 transition-colors hover:bg-[#eff6ff] hover:text-primary"
+                  >
+                    {{ child.label || (child.labelKey | translate) }}
+                  </a>
+                }
+              }
+            </div>
+          }
+        </div>
+      } @else {
+        <a
+          [routerLink]="entry.link"
+          routerLinkActive="text-primary lg:bg-transparent bg-[#eff6ff]"
+          [routerLinkActiveOptions]="{ exact: entry.link === '/' }"
+          (click)="closeMenu()"
+          class="whitespace-nowrap rounded-[14px] p-3 text-left text-[0.92rem] font-bold text-slate-700 transition-colors hover:bg-[#eff6ff] hover:text-primary lg:border-0 lg:bg-transparent lg:p-1.5 lg:text-[0.82rem] lg:hover:bg-transparent navlg:p-2 navlg:text-[0.92rem]"
+        >
+          {{ entry.labelKey | translate }}
+        </a>
+      }
+    }
+
+    <div class="mt-1 grid gap-2.5 border-t border-line pt-2.5 lg:hidden">
+      <button
+        type="button"
+        (click)="localeService.toggle()"
+        class="flex items-center justify-center gap-1.5 rounded-[14px] border border-line p-3 text-[0.92rem] font-black text-slate-600"
+        [attr.aria-label]="'Nav.SwitchLanguage' | translate"
+      >
+        <span [class]="localeService.currentLang() === 'fr' ? 'text-primary' : ''">FR</span>
+        <span class="text-line">/</span>
+        <span [class]="localeService.currentLang() === 'en' ? 'text-primary' : ''">EN</span>
+      </button>
+      <a
+        routerLink="/reservation"
+        (click)="closeMenu()"
+        class="block min-h-[46px] rounded-[14px] bg-[linear-gradient(90deg,#0000cc,#0000FF,#3785ff)] px-[18px] py-3 text-center font-extrabold text-white shadow-[0_14px_40px_rgba(0,0,255,0.24)]"
+        >{{ 'Nav.Reserve' | translate }}</a
+      >
+    </div>
+  </nav>
+
+  <button
+    type="button"
+    (click)="localeService.toggle()"
+    class="hidden shrink-0 items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-[0.82rem] font-black text-slate-600 transition-colors hover:border-primary hover:text-primary lg:flex"
+    [attr.aria-label]="'Nav.SwitchLanguage' | translate"
+  >
+    <span [class]="localeService.currentLang() === 'fr' ? 'text-primary' : ''">FR</span>
+    <span class="text-line">/</span>
+    <span [class]="localeService.currentLang() === 'en' ? 'text-primary' : ''">EN</span>
+  </button>
+
+  <a
+    routerLink="/reservation"
+    class="relative hidden min-h-[46px] shrink-0 overflow-hidden whitespace-nowrap rounded-[14px] bg-[linear-gradient(90deg,#0000cc,#0000FF,#3785ff)] px-3.5 py-2.5 text-[0.85rem] font-extrabold text-white shadow-[0_14px_40px_rgba(0,0,255,0.24)] lg:inline-flex lg:items-center navlg:px-[18px] navlg:py-3 navlg:text-base"
+  >
+    <span class="relative z-10">{{ 'Nav.Reserve' | translate }}</span>
+  </a>
+</header>

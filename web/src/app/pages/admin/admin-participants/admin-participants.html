@@ -1,0 +1,37 @@
+<main class="mx-auto my-10 max-w-[1000px] px-[22px] pb-[60px]">
+  <app-admin-page-header
+    [eyebrow]="'AdminParticipants.Eyebrow' | translate"
+    [title]="'AdminParticipants.Title' | translate"
+    [subtitle]="'AdminParticipants.Subtitle' | translate">
+  </app-admin-page-header>
+
+  <app-admin-info-card
+    [title]="'AdminParticipants.InfoTitle' | translate"
+    [description]="'AdminParticipants.InfoBody' | translate">
+  </app-admin-info-card>
+
+  <section>
+    <div class="my-6 flex flex-wrap items-center gap-3">
+      <h2 class="m-0 mr-auto text-ink">{{ 'AdminParticipants.YourParticipants' | translate }}</h2>
+      <a routerLink="new" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white">{{ 'AdminParticipants.NewParticipant' | translate }}</a>
+    </div>
+
+    @if (!loading() && participants().length === 0) {
+      <app-nodata [title]="'AdminParticipants.EmptyState' | translate"></app-nodata>
+    }
+
+    <div class="grid gap-2.5">
+      @for (participant of participants(); track participant.id) {
+        <div class="flex flex-wrap items-center gap-4 rounded-xl border border-line bg-white p-4">
+          <div class="min-w-0 flex-1">
+            <strong class="block break-words text-ink">{{ participant.nameFr }}</strong>
+            <small class="block text-muted">{{ participant.descriptionFr }}</small>
+            <small class="text-muted">{{ participant.status === 'published' ? ('Common.StatusPublished' | translate) : ('Common.StatusDraft' | translate) }}</small>
+          </div>
+          <a [routerLink]="[participant.id]" class="rounded-lg border border-primary px-3.5 py-2 font-bold text-primary">{{ 'AdminParticipants.EditButton' | translate }}</a>
+          <button type="button" (click)="deleteParticipant(participant)" class="rounded-lg border border-[#b42318] px-3.5 py-2 font-bold text-[#b42318]">{{ 'AdminParticipants.DeleteButton' | translate }}</button>
+        </div>
+      }
+    </div>
+  </section>
+</main>

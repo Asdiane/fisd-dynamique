@@ -1,0 +1,44 @@
+<main class="mx-auto my-10 max-w-[900px] px-[22px] pb-[60px]">
+  <a routerLink="/admin/souvenirs" class="mb-4 inline-flex items-center gap-1.5 font-bold text-primary">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M15 6l-6 6 6 6" /></svg>
+    {{ 'AdminSouvenirs.YourEditions' | translate }}
+  </a>
+
+  <app-admin-page-header
+    [eyebrow]="'AdminSouvenirs.Eyebrow' | translate"
+    [title]="editingId ? ('AdminSouvenirs.EditTitle' | translate) : ('AdminSouvenirs.NewTitle' | translate)">
+  </app-admin-page-header>
+
+  <form (ngSubmit)="save()" class="mt-6 grid gap-6 rounded-[22px] border border-line bg-white p-8 sm:p-10">
+    <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+      {{ 'AdminSouvenirs.FieldYear' | translate }}
+      <input name="year" type="number" required [(ngModel)]="year" class="w-full max-w-[160px] rounded-lg border border-slate-400 p-3 text-ink" />
+    </label>
+
+    <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+      {{ 'AdminSouvenirs.FieldTitle' | translate }}
+      <input name="title" maxlength="300" required [(ngModel)]="title" class="w-full rounded-lg border border-slate-400 p-3.5 text-[0.98rem] text-ink" />
+    </label>
+
+    <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+      {{ 'AdminSouvenirs.FieldDescription' | translate }}
+      <textarea name="description" rows="3" [(ngModel)]="description" class="w-full resize-y rounded-lg border border-slate-400 p-3.5 text-[0.98rem] leading-[1.6] text-ink"></textarea>
+    </label>
+
+    <label class="grid gap-2 text-[0.95rem] font-semibold text-slate-700">
+      <span class="inline-flex items-center">
+        {{ 'AdminSouvenirs.FieldStatus' | translate }}
+        <app-admin-help-tip [text]="'AdminSouvenirs.HelpStatus' | translate"></app-admin-help-tip>
+      </span>
+      <app-select name="status" [(ngModel)]="status" [options]="statusOptions" triggerClass="w-full max-w-[260px] rounded-lg border border-slate-400 bg-white p-3 text-ink"></app-select>
+    </label>
+
+    <div class="mt-2 flex flex-wrap items-center gap-3">
+      <button type="submit" [disabled]="busy()" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white disabled:cursor-wait disabled:opacity-50">{{ 'AdminContacts.Save' | translate }}</button>
+      <a routerLink="/admin/souvenirs" class="rounded-lg border border-primary px-4 py-2.5 font-bold text-primary">{{ 'AdminContacts.Cancel' | translate }}</a>
+      @if (editingId) {
+        <button type="button" [disabled]="busy()" (click)="delete()" class="ml-auto rounded-lg border border-[#b42318] px-4 py-2.5 font-bold text-[#b42318] disabled:cursor-wait disabled:opacity-50">{{ 'AdminParticipants.DeleteButton' | translate }}</button>
+      }
+    </div>
+  </form>
+</main>

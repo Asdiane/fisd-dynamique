@@ -1,0 +1,38 @@
+<main class="mx-auto my-10 max-w-[900px] px-[22px] pb-[60px]">
+  <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <app-admin-page-header
+      [eyebrow]="'AdminHelp.Eyebrow' | translate"
+      [title]="'AdminHelp.Title' | translate"
+      [subtitle]="'AdminHelp.Subtitle' | translate">
+    </app-admin-page-header>
+    @if (isPlatformAdmin) {
+      <a routerLink="/admin/help/manage" class="rounded-lg border border-primary px-4 py-2.5 font-bold text-primary">{{ 'AdminHelp.ManageButton' | translate }}</a>
+    }
+  </div>
+
+  @if (!loading() && articles().length === 0) {
+    <app-nodata [title]="'AdminHelp.EmptyState' | translate"></app-nodata>
+  }
+
+  @for (category of categories(); track category) {
+    <section class="mb-8">
+      <h2 class="mb-3 text-[1.05rem] text-ink">{{ category }}</h2>
+      <div class="grid gap-2.5">
+        @for (article of articlesFor(category); track article.id) {
+          <div class="overflow-hidden rounded-xl border border-line bg-white">
+            <button type="button" (click)="toggle(article)" class="flex w-full items-center gap-3 p-4 text-left">
+              <strong class="min-w-0 flex-1 break-words text-ink">{{ article.title }}</strong>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="h-4 w-4 shrink-0 text-muted transition-transform" [class.rotate-180]="openId() === article.id">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            @if (openId() === article.id) {
+              <div class="whitespace-pre-wrap break-words border-t border-line p-4 leading-relaxed text-[0.92rem] text-ink">{{ article.content }}</div>
+            }
+          </div>
+        }
+      </div>
+    </section>
+  }
+</main>

@@ -1,0 +1,43 @@
+<app-page-hero
+  [eyebrow]="'News.HeroEyebrow' | translate"
+  [title]="'News.HeroTitle' | translate"
+  [description]="'News.HeroDescription' | translate"
+  image="assets/images/concertations.jpeg">
+</app-page-hero>
+
+<section class="py-[clamp(44px,6vw,76px)]">
+  <div class="mx-auto w-[min(1180px,calc(100%-36px))]">
+    <app-section-title
+      [eyebrow]="'News.SectionEyebrow' | translate"
+      [title]="'News.SectionTitle' | translate"
+      [description]="'News.SectionDescription' | translate">
+    </app-section-title>
+
+    @if (loaded() && articles().length === 0) {
+      <div class="mt-8 rounded-[28px] border border-dashed border-[rgba(0,0,255,0.25)] bg-[#f8fbff] p-[clamp(28px,5vw,46px)] text-center">
+        <p class="m-0 text-[0.82rem] font-black uppercase tracking-[0.18em] text-primary">{{ 'News.SectionEyebrow' | translate }}</p>
+        <h3 class="m-0 mt-2.5 text-[clamp(1.7rem,4vw,3rem)] leading-[1.05] text-ink">{{ 'News.EmptyTitle' | translate }}</h3>
+      </div>
+    }
+
+    <div class="mt-8 grid gap-[22px]">
+      @for (article of articles(); track article.id; let i = $index) {
+        <a [appScrollReveal]="i * 70" [routerLink]="['/actualites', article.id]" [class]="'grid overflow-hidden rounded-[28px] border border-line bg-white shadow-[0_12px_34px_rgba(15,23,42,0.06)] transition-transform duration-200 hover:-translate-y-1 ' + (article.imageUrl ? 'sm:grid-cols-[minmax(230px,0.42fr)_minmax(0,1fr)]' : '')">
+          @if (article.imageUrl) {
+            <div class="min-h-[240px] bg-[#0b1028]">
+              <img [src]="article.imageUrl" [alt]="article.title" class="h-full min-h-[240px] w-full object-cover" />
+            </div>
+          }
+          <div class="p-7">
+            <div class="mb-3.5 flex flex-wrap items-center gap-2.5 text-[0.86rem] font-extrabold text-muted">
+              <span class="rounded-full bg-primary px-2.5 py-1.5 text-[0.72rem] font-black uppercase tracking-[0.1em] text-white">{{ 'News.Published' | translate }}</span>
+              <span>{{ formatDate(article.publishedAt ?? article.createdAt) }}</span>
+            </div>
+            <h3 class="m-0 mb-3 text-[clamp(1.35rem,3vw,2.3rem)] leading-[1.1] text-ink">{{ article.title }}</h3>
+            <p class="m-0 leading-[1.75] text-muted">{{ article.excerpt }}</p>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+</section>

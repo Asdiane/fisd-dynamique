@@ -1,0 +1,30 @@
+<div class="stats-counter-grid">
+  @for (stat of stats(); track stat.labelKey; let i = $index) {
+    @if (stat.link) {
+      <a
+        #card
+        [routerLink]="stat.link"
+        [fragment]="stat.fragment"
+        class="stats-counter-card stats-counter-card--link"
+        (mousemove)="onCardMove($event, card)"
+        (mouseleave)="onCardLeave(card)">
+        <ng-container [ngTemplateOutlet]="content" [ngTemplateOutletContext]="{ stat: stat, i: i }"></ng-container>
+      </a>
+    } @else {
+      <div
+        #card
+        class="stats-counter-card"
+        (mousemove)="onCardMove($event, card)"
+        (mouseleave)="onCardLeave(card)">
+        <ng-container [ngTemplateOutlet]="content" [ngTemplateOutletContext]="{ stat: stat, i: i }"></ng-container>
+      </div>
+    }
+  }
+</div>
+
+<ng-template #content let-stat="stat" let-i="i">
+  <div class="stats-counter-value">
+    <span [attr.aria-label]="stat.value + (stat.suffix || '')">{{ displayValues()[i] }}{{ stat.suffix }}</span>
+  </div>
+  <p class="stats-counter-label">{{ stat.labelKey | translate }}</p>
+</ng-template>

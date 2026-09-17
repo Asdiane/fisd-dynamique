@@ -1,0 +1,285 @@
+<ng-template #itemIcon let-icon="icon">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 shrink-0">
+    @switch (icon) {
+      @case ('articles') {
+        <rect x="3" y="4" width="18" height="16" rx="2" />
+        <line x1="7" y1="8" x2="17" y2="8" />
+        <line x1="7" y1="12" x2="17" y2="12" />
+        <line x1="7" y1="16" x2="13" y2="16" />
+      }
+      @case ('contacts') {
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="M3 7l9 6 9-6" />
+      }
+      @case ('testimonials') {
+        <path d="M4 4h16v11H9l-4 4z" />
+      }
+      @case ('souvenirs') {
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <circle cx="8.5" cy="10" r="1.4" />
+        <path d="M3 16l5-5 4 4 3-3 6 6" />
+      }
+      @case ('program') {
+        <rect x="3" y="5" width="18" height="16" rx="2" />
+        <line x1="3" y1="10" x2="21" y2="10" />
+        <line x1="8" y1="3" x2="8" y2="7" />
+        <line x1="16" y1="3" x2="16" y2="7" />
+      }
+      @case ('users') {
+        <circle cx="12" cy="7.5" r="3" />
+        <path d="M6 20l1.5-6h9l1.5 6z" />
+      }
+      @case ('slides') {
+        <rect x="3" y="5" width="18" height="12" rx="2" />
+        <circle cx="8.5" cy="10" r="1.4" />
+        <path d="M6 15l4-4 3 3 5-5" />
+        <line x1="8" y1="20" x2="16" y2="20" />
+      }
+      @case ('pillars') {
+        <line x1="6" y1="4" x2="6" y2="20" />
+        <line x1="12" y1="4" x2="12" y2="20" />
+        <line x1="18" y1="4" x2="18" y2="20" />
+        <line x1="3" y1="20" x2="21" y2="20" />
+      }
+      @case ('participants') {
+        <circle cx="8" cy="9" r="2.6" />
+        <circle cx="16" cy="9" r="2.6" />
+        <path d="M3.5 19c.6-3 2.4-4.6 4.5-4.6s3.9 1.6 4.5 4.6" />
+        <path d="M11.5 19c.6-3 2.4-4.6 4.5-4.6s3.9 1.6 4.5 4.6" />
+      }
+      @case ('speakers') {
+        <path d="M8 4h8a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H11l-4 3v-3H8a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
+      }
+      @case ('partners') {
+        <rect x="3" y="7" width="8" height="8" rx="1.5" />
+        <rect x="13" y="7" width="8" height="8" rx="1.5" />
+        <line x1="11" y1="11" x2="13" y2="11" />
+      }
+      @case ('engagement') {
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 8v4l3 2" />
+      }
+      @case ('media') {
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <circle cx="9" cy="9" r="1.8" />
+        <path d="M4 17l5-5 4 4 3-3 4 4" />
+      }
+      @case ('home-content') {
+        <path d="M4 11l8-6 8 6" />
+        <path d="M6 10v9h12v-9" />
+      }
+      @case ('publications') {
+        <path d="M4 5h11v14H4z" />
+        <path d="M15 8h5v11h-5" />
+      }
+      @case ('resources') {
+        <rect x="3" y="6" width="18" height="13" rx="2" />
+        <path d="M3 9h18" />
+      }
+      @case ('security') {
+        <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" />
+        <path d="M9.5 12l1.8 1.8L14.5 10" />
+      }
+      @case ('errorLog') {
+        <path d="M12 3L2 20h20z" />
+        <line x1="12" y1="9" x2="12" y2="14" />
+        <line x1="12" y1="17" x2="12" y2="17.01" />
+      }
+      @case ('auditLog') {
+        <rect x="4" y="3" width="16" height="18" rx="2" />
+        <line x1="8" y1="8" x2="16" y2="8" />
+        <line x1="8" y1="12" x2="16" y2="12" />
+        <line x1="8" y1="16" x2="12" y2="16" />
+      }
+      @case ('systemHealth') {
+        <path d="M22 12h-4l-3 9-6-18-3 9H2" />
+      }
+      @case ('help') {
+        <circle cx="12" cy="12" r="9" />
+        <path d="M9.5 9a2.5 2.5 0 1 1 3.2 2.4c-.9.3-1.2.9-1.2 1.9" />
+        <line x1="12" y1="17" x2="12" y2="17.01" />
+      }
+      @case ('tickets') {
+        <path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4V8Z" />
+        <line x1="10" y1="7" x2="10" y2="17" stroke-dasharray="2 2" />
+      }
+      @case ('emailHistory') {
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="M3 7l9 6 9-6" />
+      }
+    }
+  </svg>
+</ng-template>
+
+<ng-template #sidebarContent>
+  <a routerLink="/" class="flex items-center gap-3">
+    <span class="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/95 p-1.5 shadow-[0_10px_24px_rgba(0,0,0,0.24)]">
+      <img src="assets/logos/logo-fisd.png" alt="FISD" class="h-full w-full object-contain" />
+    </span>
+    <span>
+      <span class="block text-[0.7rem] font-black uppercase tracking-[0.16em] text-white/60">{{ 'AdminLogin.Eyebrow' | translate }}</span>
+      <span class="block text-[1.05rem] font-bold text-white">FISD</span>
+    </span>
+  </a>
+
+  <nav class="mt-8 grid gap-1 overflow-y-auto">
+    @for (group of navGroups; track group.labelKey) {
+      <div>
+        <button
+          type="button"
+          (click)="toggleGroup(group)"
+          class="flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-[0.92rem] font-bold text-white/70 transition-colors hover:bg-white/[8%] hover:text-white">
+          <ng-container [ngTemplateOutlet]="itemIcon" [ngTemplateOutletContext]="{ icon: group.icon }"></ng-container>
+          <span class="min-w-0 flex-1 truncate text-left">{{ group.labelKey | translate }}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="h-4 w-4 shrink-0 transition-transform" [class.rotate-90]="isGroupExpanded(group)">
+            <path d="M9 6l6 6-6 6" />
+          </svg>
+        </button>
+
+        @if (isGroupExpanded(group)) {
+          <div class="ml-4 grid gap-1 border-l border-white/10 pl-3.5">
+            @for (item of group.items; track item.route) {
+              <a
+                [routerLink]="item.route"
+                routerLinkActive="bg-white/[12%] text-white"
+                (click)="closeMenu()"
+                class="flex items-center gap-3 rounded-xl px-3 py-2 text-[0.88rem] font-bold text-white/65 transition-colors hover:bg-white/[8%] hover:text-white">
+                <ng-container [ngTemplateOutlet]="itemIcon" [ngTemplateOutletContext]="{ icon: item.icon }"></ng-container>
+                {{ item.labelKey | translate }}
+              </a>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    @if (isSuperAdmin) {
+      <a
+        [routerLink]="usersItem.route"
+        routerLinkActive="bg-white/[12%] text-white"
+        (click)="closeMenu()"
+        class="mt-2 flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[0.92rem] font-bold text-white/70 transition-colors hover:bg-white/[8%] hover:text-white">
+        <ng-container [ngTemplateOutlet]="itemIcon" [ngTemplateOutletContext]="{ icon: usersItem.icon }"></ng-container>
+        {{ usersItem.labelKey | translate }}
+      </a>
+    }
+
+    @if (isPlatformAdmin) {
+      <a
+        [routerLink]="systemHealthItem.route"
+        routerLinkActive="bg-white/[12%] text-white"
+        (click)="closeMenu()"
+        class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[0.92rem] font-bold text-white/70 transition-colors hover:bg-white/[8%] hover:text-white">
+        <ng-container [ngTemplateOutlet]="itemIcon" [ngTemplateOutletContext]="{ icon: systemHealthItem.icon }"></ng-container>
+        {{ systemHealthItem.labelKey | translate }}
+      </a>
+      <a
+        [routerLink]="errorLogsItem.route"
+        routerLinkActive="bg-white/[12%] text-white"
+        (click)="closeMenu()"
+        class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[0.92rem] font-bold text-white/70 transition-colors hover:bg-white/[8%] hover:text-white">
+        <ng-container [ngTemplateOutlet]="itemIcon" [ngTemplateOutletContext]="{ icon: errorLogsItem.icon }"></ng-container>
+        {{ errorLogsItem.labelKey | translate }}
+      </a>
+      <a
+        [routerLink]="auditLogsItem.route"
+        routerLinkActive="bg-white/[12%] text-white"
+        (click)="closeMenu()"
+        class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[0.92rem] font-bold text-white/70 transition-colors hover:bg-white/[8%] hover:text-white">
+        <ng-container [ngTemplateOutlet]="itemIcon" [ngTemplateOutletContext]="{ icon: auditLogsItem.icon }"></ng-container>
+        {{ auditLogsItem.labelKey | translate }}
+      </a>
+      <a
+        [routerLink]="emailHistoryItem.route"
+        routerLinkActive="bg-white/[12%] text-white"
+        (click)="closeMenu()"
+        class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[0.92rem] font-bold text-white/70 transition-colors hover:bg-white/[8%] hover:text-white">
+        <ng-container [ngTemplateOutlet]="itemIcon" [ngTemplateOutletContext]="{ icon: emailHistoryItem.icon }"></ng-container>
+        {{ emailHistoryItem.labelKey | translate }}
+      </a>
+    }
+
+    <a
+      [routerLink]="securityItem.route"
+      routerLinkActive="bg-white/[12%] text-white"
+      (click)="closeMenu()"
+      class="mt-2 flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[0.92rem] font-bold text-white/70 transition-colors hover:bg-white/[8%] hover:text-white">
+      <ng-container [ngTemplateOutlet]="itemIcon" [ngTemplateOutletContext]="{ icon: securityItem.icon }"></ng-container>
+      {{ securityItem.labelKey | translate }}
+    </a>
+
+    <a
+      [routerLink]="helpItem.route"
+      routerLinkActive="bg-white/[12%] text-white"
+      (click)="closeMenu()"
+      class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[0.92rem] font-bold text-white/70 transition-colors hover:bg-white/[8%] hover:text-white">
+      <ng-container [ngTemplateOutlet]="itemIcon" [ngTemplateOutletContext]="{ icon: helpItem.icon }"></ng-container>
+      {{ helpItem.labelKey | translate }}
+    </a>
+
+    <a
+      [routerLink]="ticketsItem.route"
+      routerLinkActive="bg-white/[12%] text-white"
+      (click)="closeMenu()"
+      class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[0.92rem] font-bold text-white/70 transition-colors hover:bg-white/[8%] hover:text-white">
+      <ng-container [ngTemplateOutlet]="itemIcon" [ngTemplateOutletContext]="{ icon: ticketsItem.icon }"></ng-container>
+      {{ ticketsItem.labelKey | translate }}
+    </a>
+  </nav>
+
+  <div class="mt-auto grid gap-3 border-t border-white/10 pt-5">
+    @if (currentEmail) {
+      <p class="m-0 truncate text-[0.82rem] font-bold text-white/60">{{ currentEmail }}</p>
+    }
+    <a routerLink="/" class="text-[0.88rem] font-bold text-white/70 transition-colors hover:text-white">{{ 'AdminLogin.BackToSite' | translate }}</a>
+    <button type="button" (click)="logout()" class="flex items-center justify-center gap-2 rounded-xl border border-white/20 px-3.5 py-2.5 text-[0.88rem] font-bold text-white transition-colors hover:bg-white/10">
+      {{ 'AdminArticles.Logout' | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<div class="min-h-screen bg-surface lg:flex">
+  <div class="flex items-center justify-between border-b border-line bg-white px-4 py-3 lg:hidden">
+    <a routerLink="/"><img src="assets/logos/logo-fisd.png" alt="FISD" class="h-8 w-auto object-contain" /></a>
+    <button
+      type="button"
+      (click)="menuOpen.set(true)"
+      [attr.aria-label]="'AdminShell.OpenMenu' | translate"
+      class="grid h-10 w-10 place-items-center rounded-lg border border-line">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="h-5 w-5">
+        <line x1="4" y1="7" x2="20" y2="7" />
+        <line x1="4" y1="12" x2="20" y2="12" />
+        <line x1="4" y1="17" x2="20" y2="17" />
+      </svg>
+    </button>
+  </div>
+
+  @if (menuOpen()) {
+    <div class="fixed inset-0 z-40 bg-black/45 lg:hidden" (click)="menuOpen.set(false)"></div>
+    <aside class="fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col overflow-y-auto bg-primary-900 p-6 lg:hidden">
+      <button
+        type="button"
+        (click)="menuOpen.set(false)"
+        [attr.aria-label]="'AdminShell.CloseMenu' | translate"
+        class="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-lg text-white/70 hover:bg-white/10 hover:text-white">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="h-5 w-5">
+          <line x1="6" y1="6" x2="18" y2="18" />
+          <line x1="18" y1="6" x2="6" y2="18" />
+        </svg>
+      </button>
+      <ng-container [ngTemplateOutlet]="sidebarContent"></ng-container>
+    </aside>
+  }
+
+  <aside class="hidden lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-72 lg:shrink-0 lg:flex-col lg:overflow-y-auto lg:bg-primary-900 lg:p-6">
+    <ng-container [ngTemplateOutlet]="sidebarContent"></ng-container>
+  </aside>
+
+  <div class="min-w-0 flex-1">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<app-confirm-dialog></app-confirm-dialog>
+<app-snackbar></app-snackbar>

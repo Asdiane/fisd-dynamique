@@ -1,0 +1,56 @@
+<main class="mx-auto my-10 max-w-[1200px] px-[22px] pb-[60px]">
+  <app-admin-page-header
+    [eyebrow]="'AdminSystemHealth.Eyebrow' | translate"
+    [title]="'AdminSystemHealth.Title' | translate"
+    [subtitle]="'AdminSystemHealth.Subtitle' | translate">
+  </app-admin-page-header>
+
+  @if (!loading() && health()) {
+    <div class="fade-in mt-6 grid gap-4">
+      <div class="flex items-center gap-3 rounded-xl border p-5"
+        [class]="health()!.databaseHealthy ? 'border-[#a6e9c8] bg-[#ecfdf3]' : 'border-[#f3a7a0] bg-[#fef3f2]'">
+        <span class="h-3 w-3 shrink-0 rounded-full" [class]="health()!.databaseHealthy ? 'bg-[#087443]' : 'bg-[#b42318]'"></span>
+        <strong class="text-ink">{{ (health()!.databaseHealthy ? 'AdminSystemHealth.DatabaseHealthy' : 'AdminSystemHealth.DatabaseDown') | translate }}</strong>
+      </div>
+
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="rounded-xl border border-line bg-white p-5">
+          <p class="m-0 text-[0.78rem] font-semibold uppercase tracking-wide text-muted">{{ 'AdminSystemHealth.Errors24h' | translate }}</p>
+          <p class="m-0 mt-1.5 text-[1.8rem] font-bold text-[#b42318]">{{ health()!.errorCount24h }}</p>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5">
+          <p class="m-0 text-[0.78rem] font-semibold uppercase tracking-wide text-muted">{{ 'AdminSystemHealth.Warnings24h' | translate }}</p>
+          <p class="m-0 mt-1.5 text-[1.8rem] font-bold text-[#b54708]">{{ health()!.warningCount24h }}</p>
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5">
+          <p class="m-0 text-[0.78rem] font-semibold uppercase tracking-wide text-muted">{{ 'AdminSystemHealth.ActiveAdmins' | translate }}</p>
+          <p class="m-0 mt-1.5 text-[1.8rem] font-bold text-ink">{{ health()!.activeAdminCount }}</p>
+          @if (health()!.inactiveAdminCount > 0) {
+            <p class="m-0 mt-0.5 text-[0.78rem] text-muted">{{ 'AdminSystemHealth.InactiveAdmins' | translate: { count: health()!.inactiveAdminCount } }}</p>
+          }
+        </div>
+        <div class="rounded-xl border border-line bg-white p-5">
+          <p class="m-0 text-[0.78rem] font-semibold uppercase tracking-wide text-muted">{{ 'AdminSystemHealth.PendingInvitations' | translate }}</p>
+          <p class="m-0 mt-1.5 text-[1.8rem] font-bold text-ink">{{ health()!.pendingInvitationCount }}</p>
+        </div>
+      </div>
+
+      @if (health()!.recentErrors.length > 0) {
+        <div class="mt-4">
+          <div class="mb-3 flex items-center justify-between">
+            <h2 class="m-0 text-ink">{{ 'AdminSystemHealth.RecentErrors' | translate }}</h2>
+            <a routerLink="/admin/journal-erreurs" class="text-[0.88rem] font-bold text-primary">{{ 'AdminSystemHealth.SeeAllErrors' | translate }}</a>
+          </div>
+          <div class="grid gap-2.5">
+            @for (error of health()!.recentErrors; track error.id) {
+              <div class="rounded-xl border border-line bg-white p-4">
+                <strong class="block break-words text-ink">{{ error.message }}</strong>
+                <small class="text-muted">{{ error.logged | date: 'medium' }}</small>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</main>

@@ -1,0 +1,130 @@
+<div class="grid lg:min-h-screen lg:grid-cols-2">
+  <div class="relative h-[220px] overflow-hidden bg-primary-900 sm:h-[280px] lg:h-auto">
+    @for (photo of panelPhotos; track photo; let i = $index) {
+      <img
+        [src]="photo"
+        alt=""
+        class="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1400ms] ease-in-out"
+        [class.opacity-100]="i === activePhoto()"
+        [class.opacity-0]="i !== activePhoto()" />
+    }
+    <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,34,0.55),rgba(0,0,34,0.35)_45%,rgba(0,0,34,0.92))]"></div>
+    <div class="absolute inset-x-0 top-0 p-5 sm:p-10">
+      <a routerLink="/" class="inline-flex items-center rounded-2xl bg-white/95 p-2.5 shadow-[0_18px_40px_rgba(0,0,0,0.24)] sm:p-3">
+        <img src="assets/logos/logo-fisd.png" alt="FISD" class="h-8 w-auto object-contain sm:h-[42px]" />
+      </a>
+    </div>
+    <div class="absolute inset-x-0 bottom-0 p-5 text-white sm:p-10">
+      <p class="m-0 text-[0.78rem] font-black uppercase tracking-[0.18em] text-white/80 sm:text-[0.82rem]">{{ 'AdminLogin.Eyebrow' | translate }}</p>
+      <h2 class="m-0 mt-2 max-w-[420px] text-[clamp(1.3rem,2.6vw,2.4rem)] leading-[1.1] sm:mt-3">{{ 'AdminLogin.PanelTitle' | translate }}</h2>
+      <p class="mt-2 hidden max-w-[400px] leading-[1.7] text-white/80 sm:mt-3 sm:block">{{ 'AdminLogin.PanelText' | translate }}</p>
+      <div class="mt-4 hidden flex-wrap gap-2 sm:flex">
+        <span class="rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[0.8rem] font-bold backdrop-blur-sm">{{ 'AdminLogin.EventDates' | translate }}</span>
+        <span class="rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[0.8rem] font-bold backdrop-blur-sm">{{ 'AdminLogin.EventPlace' | translate }}</span>
+      </div>
+      <div class="mt-4 hidden items-center gap-1.5 lg:flex">
+        @for (photo of panelPhotos; track photo; let i = $index) {
+          <span class="h-1.5 rounded-full transition-all duration-300" [class]="i === activePhoto() ? 'w-6 bg-white' : 'w-1.5 bg-white/35'"></span>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="grid justify-items-stretch gap-6 px-6 py-8 sm:px-10 lg:content-center lg:py-10">
+    <div class="mx-auto flex w-full max-w-[420px] items-center justify-between lg:hidden">
+      <a routerLink="/"><img src="assets/logos/logo-fisd.png" alt="FISD" class="h-9 w-auto object-contain" /></a>
+      <a routerLink="/" class="text-[0.92rem] font-bold text-primary">{{ 'AdminLogin.BackToSite' | translate }}</a>
+    </div>
+
+    <div class="mx-auto hidden w-full max-w-[420px] lg:block">
+      <a routerLink="/" class="text-[0.92rem] font-bold text-primary">{{ 'AdminLogin.BackToSite' | translate }}</a>
+    </div>
+
+    <div class="mx-auto w-full max-w-[380px]">
+      <h1 class="m-0 text-[1.65rem] font-bold text-primary-900">{{ 'AdminLogin.Title' | translate }}</h1>
+      <p class="mt-1.5 text-[0.92rem] text-muted">{{ 'AdminLogin.Subtitle' | translate }}</p>
+
+      <div class="mt-6 rounded-2xl bg-white p-6 shadow-[0_25px_65px_-15px_rgba(0,0,34,0.18)] ring-1 ring-black/5 sm:p-7">
+        @if (errorMessage()) {
+          <div class="mb-4 flex items-start gap-2 rounded-lg bg-[#fef3f2] px-3.5 py-2.5 text-[0.82rem] font-semibold text-[#b42318]">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="mt-0.5 h-4 w-4 shrink-0"><circle cx="12" cy="12" r="9" /><line x1="12" y1="8" x2="12" y2="13" /><circle cx="12" cy="16.2" r="0.4" fill="currentColor" stroke="none" /></svg>
+            <span>{{ errorMessage() }}</span>
+          </div>
+        }
+
+        <form (ngSubmit)="onSubmit()" class="grid gap-3.5">
+          <label class="grid gap-1.5">
+            <span class="text-[0.8rem] font-semibold text-slate-700">{{ 'AdminLogin.EmailLabel' | translate }}</span>
+            <input
+              name="email"
+              type="email"
+              autocomplete="username"
+              required
+              [(ngModel)]="email"
+              class="h-11 w-full rounded-lg border-0 bg-surface px-3.5 text-[0.92rem] text-ink outline-none ring-1 ring-line transition placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-primary-300" />
+          </label>
+
+          <label class="grid gap-1.5">
+            <span class="text-[0.8rem] font-semibold text-slate-700">{{ 'AdminLogin.PasswordLabel' | translate }}</span>
+            <div class="relative">
+              <input
+                name="password"
+                [type]="hidePassword() ? 'password' : 'text'"
+                autocomplete="current-password"
+                required
+                [(ngModel)]="password"
+                class="h-11 w-full rounded-lg border-0 bg-surface px-3.5 pr-11 text-[0.92rem] text-ink outline-none ring-1 ring-line transition focus:bg-white focus:ring-2 focus:ring-primary-300" />
+              <button
+                type="button"
+                (click)="hidePassword.set(!hidePassword())"
+                [attr.aria-label]="hidePassword() ? ('AdminLogin.ShowPassword' | translate) : ('AdminLogin.HidePassword' | translate)"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-primary">
+                @if (hidePassword()) {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-[18px] w-[18px]"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                } @else {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-[18px] w-[18px]"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
+                }
+              </button>
+            </div>
+          </label>
+
+          <a routerLink="/admin/forgot-password" class="-mt-1.5 justify-self-end text-[0.82rem] font-bold text-primary transition hover:brightness-110">{{ 'AdminLogin.ForgotPassword' | translate }}</a>
+
+          <button
+            type="submit"
+            [disabled]="submitting()"
+            class="mt-1.5 flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary text-[0.92rem] font-bold tracking-wide text-white transition hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50">
+            @if (submitting()) {
+              <span class="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
+            }
+            {{ 'AdminLogin.Submit' | translate }}
+          </button>
+        </form>
+
+        @if (supportsPasskeys) {
+          <div class="mt-4 flex items-center gap-3 text-[0.8rem] font-bold text-muted">
+            <span class="h-px flex-1 bg-line"></span>
+            {{ 'AdminLogin.Or' | translate }}
+            <span class="h-px flex-1 bg-line"></span>
+          </div>
+
+          <button
+            type="button"
+            (click)="signInWithPasskey()"
+            [disabled]="passkeySubmitting()"
+            class="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-slate-400 text-[0.92rem] font-bold text-ink transition hover:bg-surface active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50">
+            @if (passkeySubmitting()) {
+              <span class="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-slate-300 border-t-ink"></span>
+            } @else {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-[18px] w-[18px]">
+                <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" />
+                <path d="M9.5 12l1.8 1.8L14.5 10" />
+              </svg>
+            }
+            {{ 'AdminLogin.SignInWithPasskey' | translate }}
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+</div>

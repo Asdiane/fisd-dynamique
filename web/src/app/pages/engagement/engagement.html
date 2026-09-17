@@ -1,0 +1,80 @@
+<app-page-hero
+  [eyebrow]="'Engagement.HeroEyebrow' | translate"
+  [title]="'Engagement.HeroTitle' | translate"
+  [description]="'Engagement.HeroDescription' | translate"
+  image="assets/images/agir-avec-nous.jpg">
+</app-page-hero>
+
+<section class="bg-white py-[clamp(44px,6vw,76px)]">
+  <div class="mx-auto grid w-[min(1180px,calc(100%-36px))] grid-cols-1 items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(340px,0.86fr)]">
+    <div [appScrollReveal]="0" class="overflow-hidden rounded-[30px] border border-line bg-[#0b1028] shadow-card">
+      <img src="assets/images/agir.jpeg" [alt]="'Engagement.HeroTitle' | translate" class="aspect-[16/11] w-full object-cover" />
+    </div>
+    <div [appScrollReveal]="100">
+      <p class="mb-3.5 text-[0.82rem] font-black uppercase tracking-[0.18em] text-primary">{{ 'Engagement.IntroEyebrow' | translate }}</p>
+      <h2 class="m-0 text-[clamp(2rem,4vw,4rem)] leading-[1.05] text-ink">{{ 'Engagement.IntroTitle' | translate }}</h2>
+      <p class="mt-5 text-[1.1rem] leading-[1.8] text-muted">{{ 'Engagement.IntroText' | translate }}</p>
+      <div class="mt-6 flex flex-wrap gap-2.5">
+        @for (action of actions(); track action.title; let i = $index) {
+          <a [href]="action.link" target="_blank" rel="noopener noreferrer" class="rounded-full bg-[#eff6ff] px-3.5 py-2.5 text-[0.88rem] font-extrabold text-primary no-underline">{{ highlightLabel(i) }}</a>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-[clamp(44px,6vw,76px)]">
+  <div class="mx-auto w-[min(1180px,calc(100%-36px))]">
+    <app-section-title
+      [eyebrow]="'Engagement.ActionsEyebrow' | translate"
+      [title]="'Engagement.ActionsTitle' | translate"
+      [description]="'Engagement.ActionsDescription' | translate">
+    </app-section-title>
+    <div class="mt-11 grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(260px,0.82fr)_minmax(0,1.18fr)]">
+      <div class="grid content-start gap-7">
+        @for (action of actions(); track action.title; let i = $index) {
+          <article [id]="action.anchor" [appScrollReveal]="i * 110" class="group grid grid-cols-1 scroll-mt-24 gap-0 overflow-hidden rounded-[28px] border border-line bg-white shadow-[0_12px_34px_rgba(15,23,42,0.06)] sm:grid-cols-2">
+            <div class="relative order-1 aspect-[4/3] overflow-hidden bg-[#0b1028] sm:aspect-auto" [class]="i % 2 === 1 ? 'sm:order-2' : 'sm:order-1'">
+              <img [src]="action.image" [alt]="action.title" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              <div class="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,34,0.55),transparent_55%)] sm:bg-[linear-gradient(90deg,rgba(0,0,34,0.12),transparent_40%)]"></div>
+              <span class="absolute left-5 top-5 rounded-full border border-white/35 bg-white/15 px-3.5 py-2 text-[0.8rem] font-extrabold text-white backdrop-blur-md">{{ action.icon }}</span>
+            </div>
+            <div class="order-2 grid content-center gap-3 p-[26px]" [class]="i % 2 === 1 ? 'sm:order-1' : 'sm:order-2'">
+              <h3 class="m-0 text-[1.55rem] leading-tight text-ink">{{ action.title }}</h3>
+              <p class="m-0 leading-[1.75] text-muted">{{ action.text }}</p>
+              <p class="m-0 text-[0.95rem] text-muted">{{ action.detail }}</p>
+              <a [href]="action.link" target="_blank" rel="noopener noreferrer" class="mt-1 min-h-[46px] justify-self-start rounded-[14px] bg-[linear-gradient(90deg,#0000cc,#0000FF,#3785ff)] px-[18px] py-3 font-extrabold text-white shadow-[0_14px_40px_rgba(0,0,255,0.24)]">{{ action.cta }}</a>
+            </div>
+          </article>
+        }
+      </div>
+      <div [appScrollReveal]="150" class="grid gap-[18px] rounded-[28px] border border-line bg-white p-7 shadow-[0_12px_34px_rgba(15,23,42,0.06)] lg:sticky lg:top-[110px]">
+        <p class="m-0 text-[0.82rem] font-black uppercase tracking-[0.18em] text-primary">{{ 'Engagement.GuideEyebrow' | translate }}</p>
+        <h3 class="m-0 text-[1.55rem] text-ink">{{ 'Engagement.GuideTitle' | translate }}</h3>
+        <p class="m-0 leading-[1.75] text-muted">{{ 'Engagement.GuideText' | translate }}</p>
+        <div class="grid gap-3.5">
+          @for (step of steps; track step.number) {
+            <div class="grid grid-cols-[42px_1fr] items-start gap-3.5 rounded-[18px] border border-line bg-[rgba(15,33,78,0.035)] p-4">
+              <span class="grid h-[42px] w-[42px] place-items-center rounded-full bg-primary font-extrabold text-white">{{ step.number }}</span>
+              <div>
+                <h4 class="m-0 mb-1 text-ink">{{ step.titleKey | translate }}</h4>
+                <p class="m-0 text-[0.95rem] text-muted">{{ step.textKey | translate }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-white py-[clamp(44px,6vw,76px)]">
+  <div [appScrollReveal]="0" class="mx-auto w-[min(1180px,calc(100%-36px))]">
+    <app-section-title
+      [eyebrow]="'Engagement.PartnersEyebrow' | translate"
+      [title]="'Engagement.PartnersTitle' | translate"
+      [description]="'Engagement.PartnersDescription' | translate">
+    </app-section-title>
+    <app-partners-wall [partners]="partners()"></app-partners-wall>
+  </div>
+</section>

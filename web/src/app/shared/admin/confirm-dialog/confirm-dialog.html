@@ -1,0 +1,39 @@
+@if (dialog.state(); as state) {
+  <div class="fixed inset-0 z-[100] grid place-items-center bg-[#000022b3] p-4" (click)="dialog.respond(false)">
+    <div (click)="$event.stopPropagation()" class="w-full max-w-[420px] overflow-hidden rounded-2xl bg-white shadow-card">
+      <div class="h-1 w-full" [class]="state.variant === 'danger' ? 'bg-[#b42318]' : 'bg-primary'"></div>
+
+      <div class="flex items-start gap-3.5 p-6">
+        <div
+          class="grid h-11 w-11 shrink-0 place-items-center rounded-xl"
+          [class]="state.variant === 'danger' ? 'bg-[#fef3f2]' : 'bg-primary/10'">
+          @if (state.variant === 'danger') {
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-[#b42318]">
+              <path d="M3 6h18" /><path d="M8 6V4h8v2" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6" /><path d="M14 11v6" />
+            </svg>
+          } @else {
+            <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-primary">
+              <path fill-rule="evenodd" d="M18 10A8 8 0 112 10a8 8 0 0116 0zM8.94 6.94a1.5 1.5 0 112.12 2.12c-.4.4-.56.65-.56 1.44v.25a.75.75 0 01-1.5 0v-.25c0-1.2.42-1.77.94-2.29a.75.75 0 000-1.06.75.75 0 10-1.28.53.75.75 0 01-1.28-.53c0-.62.25-1.18.66-1.59zM10 14.5a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+            </svg>
+          }
+        </div>
+        <div class="min-w-0 flex-1 pt-1">
+          <h2 class="m-0 text-[1.05rem] font-bold text-ink">{{ state.title }}</h2>
+          <p class="m-0 mt-1.5 text-[0.92rem] leading-relaxed text-muted">{{ state.message }}</p>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 border-t border-line bg-slate-50 px-6 py-4">
+        <button type="button" (click)="dialog.respond(false)" class="rounded-lg border border-primary px-4 py-2.5 font-bold text-primary">
+          {{ state.cancelLabel || ('Common.Cancel' | translate) }}
+        </button>
+        <button
+          type="button"
+          (click)="dialog.respond(true)"
+          [class]="'rounded-lg px-4 py-2.5 font-bold text-white ' + (state.variant === 'danger' ? 'bg-[#b42318]' : 'bg-primary')">
+          {{ state.confirmLabel || ('Common.Confirm' | translate) }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

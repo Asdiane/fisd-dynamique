@@ -1,0 +1,38 @@
+<main class="mx-auto my-10 max-w-[1000px] px-[22px] pb-[60px]">
+  <app-admin-page-header
+    [eyebrow]="'AdminPillars.Eyebrow' | translate"
+    [title]="'AdminPillars.Title' | translate"
+    [subtitle]="'AdminPillars.Subtitle' | translate">
+  </app-admin-page-header>
+
+  <app-admin-info-card
+    [title]="'AdminPillars.InfoTitle' | translate"
+    [description]="'AdminPillars.InfoBody' | translate">
+  </app-admin-info-card>
+
+  <section>
+    <div class="my-6 flex flex-wrap items-center gap-3">
+      <h2 class="m-0 mr-auto text-ink">{{ 'AdminPillars.YourPillars' | translate }}</h2>
+      <a routerLink="new" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white">{{ 'AdminPillars.NewPillar' | translate }}</a>
+    </div>
+
+    @if (!loading() && pillars().length === 0) {
+      <app-nodata [title]="'AdminPillars.EmptyState' | translate"></app-nodata>
+    }
+
+    <div class="grid gap-2.5">
+      @for (pillar of pillars(); track pillar.id) {
+        <div class="flex flex-wrap items-start gap-4 rounded-xl border border-line bg-white p-4">
+          <img [src]="pillar.imageUrl" [alt]="pillar.titleFr" class="h-16 w-16 shrink-0 rounded-lg object-cover" />
+          <div class="min-w-0 flex-1">
+            <strong class="block break-words text-ink">{{ pillar.icon }}  {{ pillar.titleFr }}</strong>
+            <p class="mt-1 line-clamp-2 text-[0.92rem] text-muted">{{ pillar.textFr }}</p>
+            <small class="text-muted">{{ pillar.isVisible ? ('AdminContacts.Visible' | translate) : ('AdminContacts.Hidden' | translate) }} · {{ pillar.status === 'published' ? ('Common.StatusPublished' | translate) : ('Common.StatusDraft' | translate) }}</small>
+          </div>
+          <a [routerLink]="[pillar.id]" class="rounded-lg border border-primary px-3.5 py-2 font-bold text-primary">{{ 'AdminParticipants.EditButton' | translate }}</a>
+          <button type="button" (click)="deletePillar(pillar)" class="rounded-lg border border-[#b42318] px-3.5 py-2 font-bold text-[#b42318]">{{ 'AdminParticipants.DeleteButton' | translate }}</button>
+        </div>
+      }
+    </div>
+  </section>
+</main>

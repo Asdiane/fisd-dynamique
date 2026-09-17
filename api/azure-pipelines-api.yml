@@ -1,0 +1,225 @@
+trigger:
+  - Integration
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  projectPath: 'api/Fisd.Api/Fisd.Api.csproj'
+  solutionPath: 'api/Fisd.slnx'
+  publishOutput: '$(Build.ArtifactStagingDirectory)/publish'
+  toUpload: '$(Build.ArtifactStagingDirectory)/toUpload'
+  SmtpServer: 'smtp.gmail.com'
+  CorsOriginFrontend: 'https://beta.fisd.ca'
+  CorsOriginApi: 'https://api-beta.fisd.ca'
+
+steps:
+  # 1 - Install .NET SDK
+  - task: UseDotNet@2
+    displayName: '1 - Install .NET 10 SDK'
+    inputs:
+      packageType: 'sdk'
+      version: '10.x'
+
+  # 2 - Restore NuGet packages
+  - task: DotNetCoreCLI@2
+    displayName: '2 - dotnet restore'
+    inputs:
+      command: 'restore'
+      projects: '$(solutionPath)'
+
+  # 3 - Run unit tests
+  - task: DotNetCoreCLI@2
+    displayName: '3 - dotnet test'
+    inputs:
+      command: 'test'
+      projects: 'api/Fisd.Tests/Fisd.Tests.csproj'
+      arguments: '--configuration $(buildConfiguration) --no-restore'
+
+  # 4 - Publish application
+  - task: DotNetCoreCLI@2
+    displayName: '4 - dotnet publish'
+    inputs:
+      command: 'publish'
+      projects: '$(projectPath)'
+      arguments: '-c $(buildConfiguration) -o $(publishOutput) /p:EnvironmentName=Integration'
+      zipAfterPublish: true
+
+  # 5 - Extract ZIP
+  - task: ExtractFiles@1
+    displayName: '5 - Extract ZIP'
+    inputs:
+      archiveFilePatterns: '$(publishOutput)/*.zip'
+      destinationFolder: '$(toUpload)'
+      cleanDestinationFolder: true
+
+  # 5b - Remove app_offline.htm and Development files from publish output if present
+  - task: PowerShell@2
+    displayName: '5b - Remove app_offline.htm and Development files'
+    inputs:
+      targetType: 'inline'
+      script: |
+        $file = "$(toUpload)/app_offline.htm"
+        if (Test-Path $file) {
+          Remove-Item $file -Force
+          Write-Host "app_offline.htm removed from publish output"
+        } else {
+          Write-Host "app_offline.htm not found in publish output (OK)"
+        }
+
+        $devFile = "$(toUpload)/appsettings.Development.json"
+        if (Test-Path $devFile) {
+          Remove-Item $devFile -Force
+          Write-Host "appsettings.Development.json removed from publish output"
+        }
+
+  # 6 - Generate appsettings.Integration.json
+  - task: PowerShell@2
+    displayName: '6 - Generate appsettings.Integration.json'
+    inputs:
+      targetType: 'inline'
+      script: |
+        $json = @{
+          ConnectionStrings = @{
+            FisdDB = "$(ConnectionString)"
+          }
+          Cors = @{
+            Origins = @(
+              "$(CorsOriginFrontend)",
+              "$(CorsOriginApi)"
+            )
+          }
+          FisdAuth = @{
+            Jwt = @{
+              Key = "$(JwtKey)"
+              Issuer = "Fisd.Api"
+              Audience = "Fisd.Admin"
+              ExpiryHours = 12
+            }
+          }
+          Storage = @{
+            MediaRootPath = "media"
+            PublicBaseUrl = "$(CorsOriginApi)"
+          }
+          Email = @{
+            SmtpServer = "$(SmtpServer)"
+            SmtpPort = 587
+            Senders = @{
+              Generic = @{
+                Name = "FISD"
+                Email = "$(EmailSender)"
+                Password = "$(EmailPassword)"
+                FromAddress = "$(EmailFromAddress)"
+                Address = "$(EmailFromAddress)"
+              }
+            }
+          }
+          Site = @{
+            BaseUrl = "$(CorsOriginFrontend)"
+          }
+          Fido2 = @{
+            ServerDomain = "beta.fisd.ca"
+            ServerName = "FISD"
+            Origins = @(
+              "$(CorsOriginFrontend)"
+            )
+          }
+          Logging = @{
+            LogLevel = @{
+              Default = "Warning"
+              "Microsoft.AspNetCore" = "Warning"
+            }
+          }
+        } | ConvertTo-Json -Depth 5
+        Set-Content -Path "$(toUpload)/appsettings.Integration.json" -Value $json -Encoding UTF8
+        Write-Host "appsettings.Integration.json generated"
+
+  # 7 - Generate web.config
+  - task: PowerShell@2
+    displayName: '7 - Generate web.config'
+    inputs:
+      targetType: 'inline'
+      script: |
+        $webConfig = @"
+        <?xml version="1.0" encoding="utf-8"?>
+        <configuration>
+          <location path="." inheritInChildApplications="false">
+            <system.webServer>
+              <handlers>
+                <add name="aspNetCore" path="*" verb="*" modules="AspNetCoreModuleV2" resourceType="Unspecified" />
+              </handlers>
+              <aspNetCore processPath=".\Fisd.Api.exe" stdoutLogEnabled="true" stdoutLogFile=".\logs\stdout" hostingModel="outofprocess">
+                <environmentVariables>
+                  <environmentVariable name="ASPNETCORE_ENVIRONMENT" value="Integration" />
+                </environmentVariables>
+              </aspNetCore>
+            </system.webServer>
+          </location>
+        </configuration>
+        "@
+        $webConfig = $webConfig -replace '(?m)^        ', ''
+        Set-Content -Path "$(toUpload)/web.config" -Value $webConfig -Encoding UTF8
+        New-Item -ItemType Directory -Path "$(toUpload)/logs" -Force | Out-Null
+        Write-Host "web.config generated"
+
+  # 8 - Enable maintenance mode (stops app, releases file locks)
+  - task: FtpUpload@2
+    displayName: '8 - Enable maintenance mode'
+    inputs:
+      credentialsOption: 'inputs'
+      serverUrl: '$(FisdFtpServerUrl)'
+      username: '$(FisdFtpUsername)'
+      password: '$(FisdFtpPassword)'
+      rootDirectory: '$(Build.SourcesDirectory)/api/Fisd.Api'
+      filePatterns: 'app_offline.htm'
+      remoteDirectory: '/'
+      clean: false
+      preservePaths: false
+      trustSSL: true
+
+  # 8.5 - Wait for app to stop
+  - task: PowerShell@2
+    displayName: '8.5 - Wait for application to stop'
+    inputs:
+      targetType: 'inline'
+      script: |
+        Write-Host "Waiting 15 seconds for IIS to detect app_offline.htm and stop the application..."
+        Start-Sleep -Seconds 15
+        Write-Host "Application should now be stopped. Ready for deployment."
+
+  # 9 - Deploy via FTP
+  - task: FtpUpload@2
+    displayName: '9 - Deploy via FTP'
+    retryCountOnTaskFailure: 3
+    inputs:
+      credentialsOption: 'inputs'
+      serverUrl: '$(FisdFtpServerUrl)'
+      username: '$(FisdFtpUsername)'
+      password: '$(FisdFtpPassword)'
+      rootDirectory: '$(toUpload)'
+      filePatterns: '**'
+      remoteDirectory: '/'
+      clean: false
+      cleanContents: false
+      preservePaths: true
+      trustSSL: true
+
+  # 10 - Disable maintenance mode (always runs, even if deploy fails)
+  - task: PowerShell@2
+    displayName: '10 - Remove app_offline.htm'
+    condition: always()
+    inputs:
+      targetType: 'inline'
+      errorActionPreference: 'continue'
+      script: |
+        $raw = "$(FisdFtpServerUrl)" -replace "ftps://","" -replace "ftp://",""
+        $serverUrl = $raw.Split("/")[0]
+        Write-Host "Deleting app_offline.htm from $serverUrl"
+        & curl.exe --silent --ssl-reqd --user "$(FisdFtpUsername):$(FisdFtpPassword)" "ftp://$serverUrl/" -Q "DELE app_offline.htm" --max-time 30
+        if ($LASTEXITCODE -ne 0) {
+          Write-Host "##[warning]curl exited with code $LASTEXITCODE - app_offline.htm may need manual removal"
+        } else {
+          Write-Host "app_offline.htm deleted successfully"
+        }
+        exit 0

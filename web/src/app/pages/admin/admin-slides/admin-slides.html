@@ -1,0 +1,38 @@
+<main class="mx-auto my-10 max-w-[1000px] px-[22px] pb-[60px]">
+  <app-admin-page-header
+    [eyebrow]="'AdminSlides.Eyebrow' | translate"
+    [title]="'AdminSlides.Title' | translate"
+    [subtitle]="'AdminSlides.Subtitle' | translate">
+  </app-admin-page-header>
+
+  <app-admin-info-card
+    [title]="'AdminSlides.InfoTitle' | translate"
+    [description]="'AdminSlides.InfoBody' | translate">
+  </app-admin-info-card>
+
+  <section>
+    <div class="my-6 flex flex-wrap items-center gap-3">
+      <h2 class="m-0 mr-auto text-ink">{{ 'AdminSlides.YourSlides' | translate }}</h2>
+      <a routerLink="new" class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white">{{ 'AdminSlides.NewSlide' | translate }}</a>
+    </div>
+
+    @if (!loading() && slides().length === 0) {
+      <app-nodata [title]="'AdminSlides.EmptyState' | translate"></app-nodata>
+    }
+
+    <div class="grid gap-2.5">
+      @for (slide of slides(); track slide.id) {
+        <div class="flex flex-wrap items-start gap-4 rounded-xl border border-line bg-white p-4">
+          <img [src]="slide.imageUrl" [alt]="slide.titleFr" class="h-16 w-24 shrink-0 rounded-lg object-cover" />
+          <div class="min-w-0 flex-1">
+            <small class="block font-bold uppercase tracking-wide text-primary">{{ slide.kickerFr }}</small>
+            <strong class="block break-words text-ink">{{ slide.titleFr }}</strong>
+            <small class="text-muted">{{ slide.isVisible ? ('AdminContacts.Visible' | translate) : ('AdminContacts.Hidden' | translate) }} · {{ slide.status === 'published' ? ('Common.StatusPublished' | translate) : ('Common.StatusDraft' | translate) }}</small>
+          </div>
+          <a [routerLink]="[slide.id]" class="rounded-lg border border-primary px-3.5 py-2 font-bold text-primary">{{ 'AdminParticipants.EditButton' | translate }}</a>
+          <button type="button" (click)="deleteSlide(slide)" class="rounded-lg border border-[#b42318] px-3.5 py-2 font-bold text-[#b42318]">{{ 'AdminParticipants.DeleteButton' | translate }}</button>
+        </div>
+      }
+    </div>
+  </section>
+</main>

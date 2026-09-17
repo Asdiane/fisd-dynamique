@@ -1,0 +1,86 @@
+<app-page-hero
+  [eyebrow]="'Programming.HeroEyebrow' | translate"
+  [title]="'Programming.HeroTitle' | translate"
+  [description]="'Programming.HeroDescription' | translate"
+>
+</app-page-hero>
+
+<section class="py-[clamp(44px,6vw,76px)]">
+  <div class="mx-auto w-[min(1180px,calc(100%-36px))]">
+    <app-section-title
+      [eyebrow]="'Programming.SectionEyebrow' | translate"
+      [title]="'Programming.SectionTitle' | translate"
+    >
+    </app-section-title>
+
+    <div class="mt-8 grid grid-cols-1 items-start gap-8 lg:grid-cols-2">
+      <aside
+        [appScrollReveal]="80"
+        class="rounded-[26px] border border-line bg-white p-7 shadow-[0_12px_34px_rgba(15,23,42,0.06)]"
+      >
+        <p class="m-0 text-[0.82rem] font-black uppercase tracking-[0.18em] text-primary">
+          {{ edition().badge }}
+        </p>
+        <h3 class="mt-3.5 text-[1.55rem] text-ink">{{ edition().title }}</h3>
+        <p class="mt-3 leading-[1.75] text-muted">{{ edition().text }}</p>
+        <div class="mt-6 grid gap-3">
+          @for (day of edition().days; track day.id) {
+            <button
+              type="button"
+              (click)="selectDay(day.id)"
+              [class]="
+                'flex w-full items-center justify-between gap-3 rounded-[18px] p-4 text-left font-extrabold ' +
+                (day.id === activeDayId() ? 'bg-primary text-white' : 'bg-[#f8fbff] text-ink')
+              "
+            >
+              <span
+                ><strong class="block">{{ day.label }}</strong
+                ><small class="font-normal">{{ day.date }}</small></span
+              >
+              <span>{{
+                'Programming.ActivitiesCount' | translate: { count: day.schedule.length }
+              }}</span>
+            </button>
+          }
+        </div>
+      </aside>
+
+      <div
+        [appScrollReveal]="160"
+        class="rounded-[26px] border border-line bg-white p-7 shadow-[0_12px_34px_rgba(15,23,42,0.06)]"
+      >
+        <p class="m-0 text-[0.82rem] font-black uppercase tracking-[0.18em] text-primary">
+          {{ edition().badge }}
+        </p>
+        <h3 class="mt-3.5 text-[1.55rem] text-ink">{{ activeDay.label }}</h3>
+        <p class="mt-2 text-muted">{{ activeDay.date }}</p>
+        <div class="mt-6 grid gap-4">
+          @for (item of activeDay.schedule; track item.title) {
+            <article
+              class="grid grid-cols-1 gap-4 rounded-[22px] border border-line bg-[#f8fbff] p-[18px] sm:grid-cols-[132px_1fr]"
+            >
+              <div
+                class="self-start rounded-2xl bg-primary px-2.5 py-3.5 text-center font-black text-white"
+              >
+                {{ item.time }}
+              </div>
+              <div>
+                <h3 class="m-0 text-ink">
+                  {{ item.title }}
+                  <span
+                    class="ml-2 inline-flex rounded-full bg-[#eff6ff] px-2.5 py-1 text-[0.72rem] font-black uppercase tracking-[0.10em] text-primary"
+                    >{{ item.tag }}</span
+                  >
+                </h3>
+                <p class="mt-2 text-muted">{{ item.detail }}</p>
+                <small class="text-muted"
+                  >{{ 'Programming.Location' | translate }} : {{ item.location }}</small
+                >
+              </div>
+            </article>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

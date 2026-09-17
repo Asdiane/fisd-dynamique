@@ -1,0 +1,71 @@
+<main class="mx-auto my-10 max-w-[1200px] px-[22px] pb-[60px]">
+  <app-admin-page-header
+    [eyebrow]="'AdminErrorLogs.Eyebrow' | translate"
+    [title]="'AdminErrorLogs.Title' | translate"
+    [subtitle]="'AdminErrorLogs.Subtitle' | translate">
+  </app-admin-page-header>
+
+  <div class="my-6 flex flex-wrap items-center gap-3">
+    <app-select
+      [(ngModel)]="level"
+      (ngModelChange)="onLevelChange()"
+      [options]="levelOptions"
+      triggerClass="min-w-[180px] rounded-lg border border-slate-400 bg-white p-2.5 font-bold text-ink">
+    </app-select>
+    <span class="text-muted">{{ 'AdminErrorLogs.TotalCount' | translate: { count: totalCount() } }}</span>
+  </div>
+
+  @if (!loading() && logs().length === 0) {
+    <app-nodata [title]="'AdminErrorLogs.EmptyState' | translate"></app-nodata>
+  }
+
+  <div class="grid gap-2.5">
+    @for (log of logs(); track log.id) {
+      <div class="rounded-xl border border-line bg-white">
+        <button
+          type="button"
+          (click)="toggleDetail(log)"
+          class="flex w-full flex-wrap items-center gap-3 p-4 text-left">
+          <span class="rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold uppercase tracking-wide" [class]="levelBadgeClass(log.level)">{{ log.level }}</span>
+          <div class="min-w-0 flex-1">
+            <strong class="block break-words text-ink">{{ log.message }}</strong>
+            <small class="text-muted">
+              {{ log.logged | date: 'medium' }}
+              @if (log.requestMethod && log.requestUrl) {
+                &middot; {{ log.requestMethod }} {{ log.requestUrl }}
+              }
+              @if (log.userEmail) {
+                &middot; {{ log.userEmail }}
+              }
+            </small>
+          </div>
+          @if (log.hasException) {
+            <span class="text-muted">{{ expandedId() === log.id ? '&#9650;' : '&#9660;' }}</span>
+          }
+        </button>
+
+        @if (expandedId() === log.id && log.hasException) {
+          <div class="border-t border-line bg-surface p-4">
+            @if (loadingDetail()) {
+              <p class="text-muted">{{ 'AdminErrorLogs.LoadingDetail' | translate }}</p>
+            } @else if (expandedDetail()?.exception) {
+              <pre class="max-h-[400px] overflow-auto whitespace-pre-wrap break-words text-[0.8rem] text-ink">{{ expandedDetail()?.exception }}</pre>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  @if (totalPages > 1) {
+    <div class="my-6 flex items-center justify-center gap-3">
+      <button type="button" (click)="goToPage(page() - 1)" [disabled]="page() <= 1" class="rounded-lg border border-slate-400 px-3.5 py-2 font-bold text-ink disabled:cursor-not-allowed disabled:opacity-50">
+        {{ 'AdminErrorLogs.Previous' | translate }}
+      </button>
+      <span class="text-muted">{{ 'AdminErrorLogs.PageIndicator' | translate: { page: page(), totalPages } }}</span>
+      <button type="button" (click)="goToPage(page() + 1)" [disabled]="page() >= totalPages" class="rounded-lg border border-slate-400 px-3.5 py-2 font-bold text-ink disabled:cursor-not-allowed disabled:opacity-50">
+        {{ 'AdminErrorLogs.Next' | translate }}
+      </button>
+    </div>
+  }
+</main>

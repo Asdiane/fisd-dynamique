@@ -1,0 +1,42 @@
+.hero-tagline { top: 36px; }
+/* Keep portrait faces in their own visual area, with the original FISD gradient. */
+.fisd-hero {
+  min-height: 780px;
+}
+.fisd-hero .hero-content {
+  min-height: 780px;
+  align-items: end;
+  padding-top: 160px;
+  padding-bottom: 64px;
+}
+.hero-copy {
+  width: min(52%, 650px);
+}
+.fisd-hero img.hero-image {
+  position: absolute;
+  right: 0;
+  width: 68%;
+  mask-image: linear-gradient(to right, transparent, black 18%);
+  height: 100%;
+}
+@media (max-width: 767px) {
+  .hero-tagline { top: 350px; }
+  .fisd-hero {
+    min-height: 0;
+  }
+  .fisd-hero img.hero-image {
+    width: 100%;
+    height: 370px;
+    mask-image: linear-gradient(to bottom, black 85%, transparent);
+    object-position: center top !important;
+  }
+  .fisd-hero .hero-content {
+    min-height: 0;
+    align-items: start;
+    padding-top: 435px;
+    padding-bottom: 40px;
+  }
+  .hero-copy {
+    width: 100%;
+  }
+}
