@@ -46,7 +46,7 @@
     "TaglinePrefix": "FISD is",
     "HeroReserve": "Reserve a spot",
     "HeroDiscover": "Discover FISD",
-    "HeroPastEditions": "See past editions",
+    "HeroPastEditions": "View the programme",
     "CountdownTitle": "Countdown to FISD 2026",
     "StatsEyebrow": "FISD by the numbers",
     "StatsTitle": "FISD in figures",
@@ -653,7 +653,9 @@
     "DeleteSuccess": "Testimonial deleted.",
     "InfoTitle": "Featured testimonials",
     "InfoBody": "Testimonials visible here are shown on the Memories page, in the order set below.",
-    "Image": "Testimonial image"
+    "Image": "Testimonial photo",
+    "ImageHelp": "Add a photo (JPG, PNG or WebP, up to 5 MB), then save the testimonial.",
+    "Uploading": "Uploading photo…"
   },
   "AdminSouvenirs": {
     "Eyebrow": "EDITORIAL SPACE",

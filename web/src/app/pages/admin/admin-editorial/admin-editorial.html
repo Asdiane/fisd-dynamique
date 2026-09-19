@@ -29,6 +29,26 @@
         </button>
       </div>
       <section class="rounded-[24px] border border-line bg-white p-6">
+        <h2 class="text-2xl">{{ editorial.local('Pied de page : liens et informations', 'Footer: links and information') }}</h2>
+        <p class="my-3 text-muted">{{ editorial.local('Ajoutez un texte ou un lien dans la colonne souhaitée. Laissez le lien vide pour une information simple.', 'Add text or a link to the desired column. Leave the link empty for plain information.') }}</p>
+        <a href="/admin/contacts" class="text-primary underline">{{ editorial.local('Gérer les coordonnées et les réseaux sociaux', 'Manage contact details and social networks') }}</a>
+        @for (item of model.footerItems; track $index; let i = $index) {
+          <div class="my-4 grid gap-3 rounded-xl border border-line p-4 md:grid-cols-2">
+            <label class="grid gap-2">{{ editorial.local('Colonne', 'Column') }}<select [(ngModel)]="item.group" (ngModelChange)="changed()" [name]="'footerGroup'+i" class="rounded-lg border p-3"><option value="about">{{ 'Footer.About' | translate }}</option><option value="menu">{{ 'Footer.Menu' | translate }}</option><option value="contact">{{ 'Footer.ContactsTitle' | translate }}</option></select></label>
+            <label class="flex items-center gap-2"><input type="checkbox" [(ngModel)]="item.visible" (ngModelChange)="changed()" [name]="'footerVisible'+i" />{{ 'AdminEditorial.Visible' | translate }}</label>
+            <label class="grid gap-2">Texte · Français<textarea required maxlength="1000" [(ngModel)]="item.textFr" (ngModelChange)="changed()" [name]="'footerFr'+i" class="rounded-lg border p-3"></textarea></label>
+            <label class="grid gap-2">Text · English<textarea required maxlength="1000" [(ngModel)]="item.textEn" (ngModelChange)="changed()" [name]="'footerEn'+i" class="rounded-lg border p-3"></textarea></label>
+            <label class="grid gap-2 md:col-span-2">{{ editorial.local('Lien facultatif : /page, https://…, mailto:… ou tel:…', 'Optional link: /page, https://…, mailto:… or tel:…') }}<input maxlength="2048" [(ngModel)]="item.url" (ngModelChange)="changed()" [name]="'footerUrl'+i" class="rounded-lg border p-3" /></label>
+            <div class="flex gap-3 md:col-span-2">
+              <button type="button" (click)="moveFooterItem(i,-1)" [disabled]="i===0" class="rounded-lg border p-2 disabled:opacity-30">{{ 'AdminEditorial.Up' | translate }}</button>
+              <button type="button" (click)="moveFooterItem(i,1)" [disabled]="i===(model.footerItems?.length ?? 0)-1" class="rounded-lg border p-2 disabled:opacity-30">{{ 'AdminEditorial.Down' | translate }}</button>
+              <button type="button" (click)="model.footerItems!.splice(i,1); changed()" class="rounded-lg border p-2 text-red-700">{{ 'AdminEditorial.Remove' | translate }}</button>
+            </div>
+          </div>
+        }
+        <button type="button" (click)="addFooterItem()" class="mt-3 rounded-lg bg-primary px-4 py-2 text-white">{{ editorial.local('Ajouter une information ou un lien', 'Add information or a link') }}</button>
+      </section>
+      <section class="rounded-[24px] border border-line bg-white p-6">
         <h2 class="mb-5 text-2xl">{{ 'AdminEditorial.Sections' | translate }}</h2>
         @for (section of model.sections; track section.id; let i = $index) {
           <div class="mb-4 rounded-2xl border border-line p-4">

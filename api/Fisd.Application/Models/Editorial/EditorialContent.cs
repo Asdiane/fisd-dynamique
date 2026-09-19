@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Fisd.Application.Models.Editorial;
 public class EditorialContent : IValidatableObject
 {
+    public List<FooterItem>? FooterItems { get; set; }
     public Dictionary<string, string> Fr { get; set; } = new();
     public Dictionary<string, string> En { get; set; } = new();
     public List<HomeSection> Sections { get; set; } = new();
@@ -26,6 +27,12 @@ public class EditorialContent : IValidatableObject
             yield return new ValidationResult("Les chiffres doivent être positifs et leurs libellés courts.");
         foreach (var url in new[] { ReportUrl, NewsletterUrl, TikTokUrl, YouTubeUrl, ThemeImage })
             if (url == null || url.Length > 2048 || !IsSafeUrl(url)) yield return new ValidationResult("Utilisez une adresse HTTPS ou un chemin local.");
+        if (FooterItems != null && (FooterItems.Count > 40 || FooterItems.Any(x => x == null ||
+            !new[] { "about", "menu", "contact" }.Contains(x.Group) ||
+            string.IsNullOrWhiteSpace(x.TextFr) || string.IsNullOrWhiteSpace(x.TextEn) ||
+            x.TextFr.Length > 1000 || x.TextEn.Length > 1000 || x.Url == null || x.Url.Length > 2048 ||
+            !(IsSafeUrl(x.Url) || (Uri.TryCreate(x.Url, UriKind.Absolute, out var u) && (u.Scheme == "mailto" || u.Scheme == "tel"))))))
+            yield return new ValidationResult("Informations ou liens du pied de page invalides.");
         var builtIn = new[] { "theme", "program", "speakers", "stats", "pillars", "testimonials", "partners", "custom" };
         foreach (var section in Sections)
         {
@@ -62,4 +69,12 @@ public class EditorialStat
     public string Suffix { get; set; } = "";
     public string LabelFr { get; set; } = "";
     public string LabelEn { get; set; } = "";
+}
+
+public class FooterItem {
+ public string Group { get; set; } = "menu";
+ public string TextFr { get; set; } = "";
+ public string TextEn { get; set; } = "";
+ public string Url { get; set; } = "";
+ public bool Visible { get; set; } = true;
 }

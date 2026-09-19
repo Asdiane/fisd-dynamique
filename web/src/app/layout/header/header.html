@@ -1,5 +1,5 @@
 <header
-  class="sticky top-0 z-50 flex items-center justify-between gap-[18px] border-b border-slate-300/35 bg-white/95 px-4 py-3 shadow-[0_8px_30px_rgba(15,23,42,0.06)] backdrop-blur-md sm:px-[clamp(18px,4vw,42px)] sm:py-3.5"
+  class="sticky top-0 z-50 flex items-center justify-between gap-[18px] bg-transparent px-4 py-3 backdrop-blur-md sm:px-[clamp(18px,4vw,42px)] sm:py-3.5"
 >
   <a
     routerLink="/"
@@ -9,7 +9,7 @@
     <img
       src="assets/logos/logo-fisd.png"
       alt="Logo FISD"
-      class="h-auto max-h-[50px] w-[145px] object-contain sm:max-h-[72px] sm:w-[clamp(120px,16vw,190px)]"
+      class="h-auto max-h-[76px] w-[210px] object-contain sm:max-h-[110px] sm:w-[clamp(190px,22vw,285px)]"
     />
   </a>
 
@@ -26,7 +26,7 @@
 
   <nav
     [class]="
-      'fixed left-4 right-4 top-[76px] z-40 grid gap-1 rounded-[24px] border border-line bg-white p-3 shadow-card transition-all duration-150 lg:static lg:left-auto lg:right-auto lg:top-auto lg:z-auto lg:flex lg:items-center lg:gap-0.5 lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none navlg:gap-[6px] ' +
+      'fixed left-4 right-4 top-[104px] sm:top-[142px] z-40 grid gap-1 rounded-[24px] border border-line bg-white p-3 shadow-card transition-all duration-150 lg:static lg:left-auto lg:right-auto lg:top-auto lg:z-auto lg:flex lg:items-center lg:gap-0.5 lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none navlg:gap-[6px] ' +
       (menuOpen()
         ? 'pointer-events-auto translate-y-0 opacity-100'
         : 'pointer-events-none -translate-y-3.5 opacity-0 lg:pointer-events-auto lg:translate-y-0 lg:opacity-100')

@@ -23,7 +23,10 @@ export interface EditorialStat {
   labelFr: string;
   labelEn: string;
 }
+export interface FooterItem { group: string; textFr: string; textEn: string; url: string; visible: boolean; }
+export const DEFAULT_FOOTER_ITEMS: FooterItem[] = [{"group":"about","textFr":"Présentation","textEn":"Presentation","url":"/#presentation","visible":true},{"group":"about","textFr":"Actualités","textEn":"News","url":"/actualites","visible":true},{"group":"about","textFr":"Éditions précédentes","textEn":"Previous editions","url":"/galerie","visible":true},{"group":"menu","textFr":"Conditions","textEn":"Terms","url":"/conditions","visible":true},{"group":"menu","textFr":"Devenir partenaire","textEn":"Become a partner","url":"/agir#partenaire","visible":true},{"group":"menu","textFr":"Devenir bénévole","textEn":"Volunteer","url":"/agir#benevole","visible":true},{"group":"menu","textFr":"Devenir exposant","textEn":"Become an exhibitor","url":"/agir#stand","visible":true}];
 export interface EditorialContent {
+  footerItems?: FooterItem[] | null;
   fr: Record<string, string>;
   en: Record<string, string>;
   sections: HomeSection[];
@@ -36,6 +39,7 @@ export interface EditorialContent {
 }
 export function defaultEditorial(): EditorialContent {
   return {
+    footerItems: structuredClone(DEFAULT_FOOTER_ITEMS),
     fr: {},
     en: {},
     sections: ['theme', 'program', 'speakers', 'stats', 'pillars', 'testimonials', 'partners'].map(
@@ -50,7 +54,7 @@ export function defaultEditorial(): EditorialContent {
         buttons: [],
       }),
     ),
-    stats: [{ value: 3, suffix: '', labelFr: 'Éditions', labelEn: 'Editions' }],
+    stats: [{"labelFr":"Partenaires","suffix":"","value":18,"labelEn":"Partners"},{"labelFr":"Axes d’engagement","suffix":"","value":3,"labelEn":"Areas of engagement"},{"labelFr":"Intervenants et panélistes","suffix":"","value":14,"labelEn":"Speakers and panelists"},{"labelFr":"Pays membres","suffix":"+","value":20,"labelEn":"Member countries"},{"labelFr":"Éditions","suffix":"","value":3,"labelEn":"Editions"},{"labelFr":"Entreprises","suffix":"+","value":50,"labelEn":"Businesses"}],
     themeImage: 'assets/images/concertations.jpeg',
     reportUrl: '',
     newsletterUrl: '',

@@ -20,8 +20,8 @@ export const EDITORIAL_TEXTS = [
   {
     key: 'Home.HeroPastEditions',
     group: 'Home',
-    fr: 'Voir les éditions précédentes',
-    en: 'See past editions',
+    fr: 'Voir le programme',
+    en: 'View the programme',
   },
   {
     key: 'Home.CountdownTitle',

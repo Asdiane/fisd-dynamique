@@ -1,6 +1,6 @@
 import { computed } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { EditorialService } from '../../core/editorial.service';
+import { EditorialService, DEFAULT_FOOTER_ITEMS } from '../../core/editorial.service';
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -59,6 +59,8 @@ function inferSocialIcon(href: string): SocialIcon {
   templateUrl: './footer.html',
 })
 export class FooterComponent implements OnInit {
+  readonly contactLinks = signal<ContactLink[]>([FALLBACK_EMAIL, FALLBACK_PHONE]);
+  footerItems(group: string) { return (this.editorial.content().footerItems ?? DEFAULT_FOOTER_ITEMS).filter(item => item.visible && item.group === group); }
   readonly showFacebook = signal(false);
   readonly allSocialLinks = computed(() => {
     const links = [...this.socialLinks()];
@@ -111,12 +113,16 @@ export class FooterComponent implements OnInit {
 
   private applyContacts(contacts: Contact[]): void {
     const socials = contacts.filter((c) => c.type === ContactType.Social && c.href);
-    if (socials.length > 0) {
+    {
       this.socialLinks.set(
         socials.map((c) => ({ name: c.label, href: c.href!, icon: inferSocialIcon(c.href!) })),
       );
     }
 
+    this.contactLinks.set(contacts.filter(c => c.type !== ContactType.Social).map(c => ({
+      label: c.value,
+      href: c.href || (c.type === ContactType.Email ? 'mailto:' + c.value : c.type === ContactType.Phone ? 'tel:' + c.value : ''),
+    })));
     const email = contacts.find((c) => c.type === ContactType.Email);
     if (email) {
       this.email.set({ label: email.value, href: email.href ?? `mailto:${email.value}` });

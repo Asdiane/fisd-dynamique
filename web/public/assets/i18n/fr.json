@@ -46,7 +46,7 @@
     "TaglinePrefix": "Le FISD, c'est",
     "HeroReserve": "Réserver une place",
     "HeroDiscover": "Découvrir le FISD",
-    "HeroPastEditions": "Voir les éditions précédentes",
+    "HeroPastEditions": "Voir le programme",
     "CountdownTitle": "Compte à rebours avant le FISD 2026",
     "StatsEyebrow": "Le FISD en chiffres",
     "StatsTitle": "Le FISD en chiffres",
@@ -653,7 +653,9 @@
     "DeleteSuccess": "Témoignage supprimé.",
     "InfoTitle": "Témoignages mis en avant",
     "InfoBody": "Les témoignages visibles ici s'affichent sur la page Souvenirs, dans l'ordre défini ci-dessous.",
-    "Image": "Image du témoignage"
+    "Image": "Photo du témoignage",
+    "ImageHelp": "Ajoutez une photo (JPG, PNG ou WebP, 5 Mo maximum), puis enregistrez le témoignage.",
+    "Uploading": "Envoi de la photo en cours…"
   },
   "AdminSouvenirs": {
     "Eyebrow": "ESPACE ÉDITORIAL",

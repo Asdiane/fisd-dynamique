@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   EditorialService,
+  DEFAULT_FOOTER_ITEMS,
   EditorialContent,
   defaultEditorial,
   HomeSection,
@@ -48,10 +49,22 @@ export class AdminEditorialComponent implements OnInit {
     this.editorial.get().subscribe({
       next: (value) => {
         this.model = structuredClone(value ?? defaultEditorial());
+        this.model.footerItems ??= structuredClone(DEFAULT_FOOTER_ITEMS);
         this.loaded.set(true);
       },
       error: () => this.error.set('AdminEditorial.LoadError'),
     });
+  }
+  addFooterItem() {
+    (this.model.footerItems ??= []).push({group: 'menu', textFr: '', textEn: '', url: '', visible: true});
+    this.changed();
+  }
+  moveFooterItem(index: number, offset: number) {
+    const items = this.model.footerItems!;
+    const target = index + offset;
+    if (target < 0 || target >= items.length) return;
+    [items[index], items[target]] = [items[target], items[index]];
+    this.changed();
   }
   get filteredTexts() {
     const q = this.search.toLocaleLowerCase();

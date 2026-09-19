@@ -48,8 +48,12 @@
         type="file"
         accept="image/jpeg,image/png,image/webp"
         (change)="uploadImage($event)"
-        [disabled]="uploading()"
+        [disabled]="uploading() || busy() || loading()"
     /></label>
+    <p class="text-sm text-muted">{{ 'AdminTestimonials.ImageHelp' | translate }}</p>
+    @if (uploading()) {
+      <p role="status" class="text-sm text-primary">{{ 'AdminTestimonials.Uploading' | translate }}</p>
+    }
     @if (imageUrl) {
       <div>
         <img [src]="imageUrl" alt="" class="h-28 w-28 rounded-2xl object-cover" /><button
@@ -159,7 +163,7 @@
     <div class="mt-2 flex flex-wrap items-center gap-3">
       <button
         type="submit"
-        [disabled]="busy()"
+        [disabled]="busy() || uploading() || loading()"
         class="rounded-lg bg-primary px-4 py-2.5 font-bold text-white disabled:cursor-wait disabled:opacity-50"
       >
         {{ 'AdminContacts.Save' | translate }}
@@ -172,7 +176,7 @@
       @if (editingId) {
         <button
           type="button"
-          [disabled]="busy()"
+          [disabled]="busy() || uploading() || loading()"
           (click)="delete()"
           class="ml-auto rounded-lg border border-[#b42318] px-4 py-2.5 font-bold text-[#b42318] disabled:cursor-wait disabled:opacity-50"
         >

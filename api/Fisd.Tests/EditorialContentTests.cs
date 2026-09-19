@@ -6,6 +6,16 @@ using Fisd.Application.Services;
 namespace Fisd.Tests;
 public class EditorialContentTests
 {
+ [Theory]
+ [InlineData("javascript:alert(1)")]
+ [InlineData("//evil.example")]
+ public void RejectsUnsafeFooterLinks(string url) => Assert.NotEmpty(Validate(new EditorialContent { FooterItems = [new FooterItem { TextFr="Lien", TextEn="Link", Url=url }] }));
+ [Fact] public void PreservesFooterInformationAndLinks() {
+  var model = new EditorialContent { FooterItems = [new FooterItem { Group="contact", TextFr="Adresse", TextEn="Address" },new FooterItem { TextFr="Programme", TextEn="Programme", Url="/programmation/2026", Visible=false }] };
+  Assert.Empty(Validate(model));
+  var saved=JsonSerializer.Deserialize<EditorialContent>(JsonSerializer.Serialize(model))!;
+  Assert.Equal(2,saved.FooterItems!.Count); Assert.False(saved.FooterItems[1].Visible);
+ }
  private static List<ValidationResult> Validate(EditorialContent model) => model.Validate(new ValidationContext(model)).ToList();
  [Theory]
  [InlineData("javascript:alert(1)")]

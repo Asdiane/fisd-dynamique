@@ -94,53 +94,30 @@
 
     <div class="grid content-start gap-3">
       <h3 class="m-0 text-[1.1rem]">{{ 'Footer.About' | translate }}</h3>
-      <a
-        routerLink="/"
-        fragment="presentation"
-        class="text-white/75 transition-colors hover:text-white"
-        >{{ 'Nav.AboutPresentation' | translate }}</a
-      >
-      <a routerLink="/actualites" class="text-white/75 transition-colors hover:text-white">{{
-        'Nav.News' | translate
-      }}</a>
-      <a routerLink="/galerie" class="text-white/75 transition-colors hover:text-white">{{
-        'Nav.PreviousEdition' | translate
-      }}</a>
+      @for (item of footerItems('about'); track $index) {
+        @if (item.url) { <a [href]="item.url" class="break-words whitespace-pre-line text-white/75 hover:text-white">{{ editorial.local(item.textFr,item.textEn) }}</a> }
+        @else { <p class="m-0 break-words whitespace-pre-line text-white/75">{{ editorial.local(item.textFr,item.textEn) }}</p> }
+      }
     </div>
 
     <div class="grid content-start gap-3">
       <h3 class="m-0 text-[1.1rem]">{{ 'Footer.Menu' | translate }}</h3>
-      <a routerLink="/conditions" class="text-white/75 transition-colors hover:text-white">{{
-        'Footer.Conditions' | translate
-      }}</a>
-      <a
-        routerLink="/agir"
-        fragment="partenaire"
-        class="text-white/75 transition-colors hover:text-white"
-        >{{ 'Nav.EngagePartner' | translate }}</a
-      >
-      <a
-        routerLink="/agir"
-        fragment="benevole"
-        class="text-white/75 transition-colors hover:text-white"
-        >{{ 'Nav.EngageVolunteer' | translate }}</a
-      >
-      <a
-        routerLink="/agir"
-        fragment="stand"
-        class="text-white/75 transition-colors hover:text-white"
-        >{{ 'Nav.EngageStand' | translate }}</a
-      >
+      @for (item of footerItems('menu'); track $index) {
+        @if (item.url) { <a [href]="item.url" class="break-words whitespace-pre-line text-white/75 hover:text-white">{{ editorial.local(item.textFr,item.textEn) }}</a> }
+        @else { <p class="m-0 break-words whitespace-pre-line text-white/75">{{ editorial.local(item.textFr,item.textEn) }}</p> }
+      }
     </div>
 
     <div class="grid content-start gap-3">
       <h3 class="m-0 text-[1.1rem]">{{ 'Footer.ContactsTitle' | translate }}</h3>
-      <a [href]="email().href" class="text-white/75 transition-colors hover:text-white">{{
-        email().label
-      }}</a>
-      <a [href]="phone().href" class="text-white/75 transition-colors hover:text-white">{{
-        phone().label
-      }}</a>
+      @for (contact of contactLinks(); track $index) {
+        @if (contact.href) { <a [href]="contact.href" class="break-words text-white/75 hover:text-white">{{ contact.label }}</a> }
+        @else { <p class="m-0 whitespace-pre-line text-white/75">{{ contact.label }}</p> }
+      }
+      @for (item of footerItems('contact'); track $index) {
+        @if (item.url) { <a [href]="item.url" class="break-words whitespace-pre-line text-white/75 hover:text-white">{{ editorial.local(item.textFr,item.textEn) }}</a> }
+        @else { <p class="m-0 break-words whitespace-pre-line text-white/75">{{ editorial.local(item.textFr,item.textEn) }}</p> }
+      }
       <div class="mt-5 border-t border-white/20 pt-5">
         <h3 class="text-lg">{{ 'Footer.Newsletter' | translate }}</h3>
         <p class="mt-3 text-sm leading-relaxed text-white/75">
